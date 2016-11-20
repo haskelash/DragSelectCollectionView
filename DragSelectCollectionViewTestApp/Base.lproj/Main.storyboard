@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="YAu-34-5hx">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="ev1-NW-B2v">
+            <objects>
+                <viewController id="YAu-34-5hx" customClass="ViewController" customModule="DragSelectCollectionViewTestApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="yS0-0e-N19"/>
+                        <viewControllerLayoutGuide type="bottom" id="dzU-cT-EmM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="J73-UH-a06">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KNS-vn-QF6" customClass="DragSelectCollectionView" customModule="DragSelectCollectionView">
+                                <rect key="frame" x="-4" y="44" width="383" height="623"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="vCV-sL-2RJ">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="50" height="50"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="LHc-RC-Bfm" customClass="Cell" customModule="DragSelectCollectionViewTestApp" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="60" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                        <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Header" id="kCw-Yl-X2u">
+                                    <rect key="frame" x="0.0" y="0.0" width="383" height="50"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </collectionReusableView>
+                                <connections>
+                                    <outlet property="dataSource" destination="YAu-34-5hx" id="l9n-jA-Wqg"/>
+                                    <outletCollection property="gestureRecognizers" destination="ADM-A7-H43" appends="YES" id="DeY-JI-0Kc"/>
+                                </connections>
+                            </collectionView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Dp-Pa-uJv">
+                                <rect key="frame" x="-4" y="0.0" width="383" height="44"/>
+                                <items>
+                                    <navigationItem title="Title" id="vaY-r1-9A4"/>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="4Dp-Pa-uJv" firstAttribute="leading" secondItem="J73-UH-a06" secondAttribute="leadingMargin" constant="-20" id="3ov-ge-9SU"/>
+                            <constraint firstItem="KNS-vn-QF6" firstAttribute="top" secondItem="4Dp-Pa-uJv" secondAttribute="bottom" id="Aka-Jf-4b3"/>
+                            <constraint firstItem="4Dp-Pa-uJv" firstAttribute="top" secondItem="J73-UH-a06" secondAttribute="topMargin" id="By5-ev-4PZ"/>
+                            <constraint firstItem="dzU-cT-EmM" firstAttribute="top" secondItem="KNS-vn-QF6" secondAttribute="bottom" id="XWV-Yl-NyH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="KNS-vn-QF6" secondAttribute="trailing" constant="-20" id="eoj-Li-fVh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4Dp-Pa-uJv" secondAttribute="trailing" constant="-20" id="lDm-zx-4w7"/>
+                            <constraint firstItem="KNS-vn-QF6" firstAttribute="leading" secondItem="J73-UH-a06" secondAttribute="leadingMargin" constant="-20" id="oNr-e1-Clm"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="KNS-vn-QF6" id="qDB-jp-mdW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6e4-AL-6PF" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer cancelsTouchesInView="NO" allowableMovement="10" minimumPressDuration="0.5" id="ADM-A7-H43">
+                    <connections>
+                        <action selector="longPressWith:" destination="YAu-34-5hx" id="Y47-KQ-ydP"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+        </scene>
+    </scenes>
+</document>
