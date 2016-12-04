@@ -101,18 +101,90 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         }
     }
 
-    private func iterate(start: IndexPath, end: IndexPath, closed: Bool, block:(_ indexPath: IndexPath)->()) {
+    /**
+     */
+    final func selectRange(from: IndexPath, to: IndexPath, min: IndexPath, max: IndexPath) {
+        if from.compare(to) == .orderedAscending {
+            //when selecting from first selection forwards
+            iterate(start: from, end: to, block: { indexPath in
+                self.setSelected(true, for: indexPath)
+            })
+            if max != nilPath && to.compare(max) == .orderedAscending {
+                //deselect items after current selection
+                iterate(start: to, end: max, openLeft: true, block: { indexPath in
+                    self.setSelected(false, for: indexPath)
+                })
+            }
+            if min != nilPath && min.compare(from) == .orderedAscending {
+                //deselect items before first selection
+                iterate(start: min, end: from, openRight: true, block: { indexPath in
+                    self.setSelected(false, for: indexPath)
+                })
+            }
+        } else if from.compare(to) == .orderedDescending {
+            //when selecting from first selection backwards
+            iterate(start: to, end: from, block: { indexPath in
+                self.setSelected(true, for: indexPath)
+            })
+            if min != nilPath && min.compare(to) == .orderedAscending {
+                //deselect items before current selection
+                iterate(start: min, end: to, openRight: true, block: { indexPath in
+                    self.setSelected(false, for: indexPath)
+                })
+            }
+            if max != nilPath && from.compare(max) == .orderedAscending {
+                //deselect items after first selection
+                iterate(start: from, end: max, openLeft: true, block: { indexPath in
+                    self.setSelected(false, for: indexPath)
+
+                })
+            }
+        } else {
+            //finger is back on first item, deselect everything else
+            iterate(start: min, end: max, block: { indexPath in
+                if indexPath != from {
+                    self.setSelected(false, for: indexPath)
+                }
+            })
+        }
+    }
+
+    private func iterate(start: IndexPath, end: IndexPath,
+                         openLeft: Bool = false, openRight: Bool = false,
+                         block:(_ indexPath: IndexPath)->()) {
+
         var current = start
         var last = end
-        if !closed {
+
+        if openLeft {
+            if current.item + 1 < collectionView.numberOfItems(inSection: current.section) {
+                current = IndexPath(item: current.item+1, section: current.section)
+            } else {
+                for section in current.section+1..<collectionView.numberOfSections {
+                    if collectionView.numberOfItems(inSection: section) > 0 {
+                        current = IndexPath(item: 0, section: section)
+                        break
+                    }
+                }
+            }
+        }
+
+        if openRight {
             if last.item > 0 {
                 last = IndexPath(item: last.item-1, section: last.section)
             } else {
-                let itemsInPrevious = collectionView.numberOfItems(inSection: last.section-1)
-                //TODO: what if number of items are 3, 0, 3 - i.e. going back a section has 0 items but going back 2 is ok?
-                last = IndexPath(item: itemsInPrevious-1, section: last.section-1)
+                for section in stride(from: last.section-1, through: 0, by: -1) {
+                    if collectionView.numberOfItems(inSection: section) > 0 {
+                        let items = collectionView.numberOfItems(inSection: section)
+                        if items > 0 {
+                            last = IndexPath(item: items-1, section: section)
+                            break
+                        }
+                    }
+                }
             }
         }
+
         while current.compare(last) != .orderedDescending {
             block(current)
             if collectionView.numberOfItems(inSection: current.section) > current.item + 1 {
@@ -124,68 +196,6 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
     }
 
     private let nilPath = IndexPath(item: -1, section: -1)
-
-    final func selectRange(from: IndexPath, to: IndexPath, min: IndexPath, max: IndexPath) {
-        if from == to {
-            // Finger is back on the initial item, unselect everything else
-            iterate(start: min, end: max, closed: true, block: { indexPath in
-                if indexPath != from {
-                    self.setSelected(false, for: indexPath)
-                }
-            })
-//            for i in min...max {
-//                if i == from { continue }
-//                setSelected(i, selected: false)
-//            }
-      //      fireSelectionListener()
-            return
-        }
-
-        if to.compare(from) == .orderedAscending {
-            // When selecting from one to previous items
-            iterate(start: to, end: from, closed: true, block: { indexPath in
-                self.setSelected(true, for: indexPath)
-            })
-            if min != nilPath && min.compare(to) == .orderedAscending {
-                // Unselect items that were selected during this drag but no longer are
-                iterate(start: min, end: to, closed: false, block: { indexPath in
-                    if indexPath != from {
-                        self.setSelected(false, for: indexPath)
-                    }
-                })
-            }
-            if max != nilPath && from.compare(max) == .orderedAscending {
-                iterate(start: from, end: max, closed: true, block: { indexPath in
-                    self.setSelected(false, for: indexPath)
-
-                })
-            }
-        } else {// When selecting from one to next items
-            iterate(start: from, end: to, closed: true, block: { indexPath in
-                self.setSelected(true, for: indexPath)
-            })
-            if max != nilPath && max.compare(to) == .orderedDescending {
-                // Unselect items that were selected during this drag but no longer are
-                var afterTo: IndexPath!
-                if to.item + 1 < collectionView.numberOfItems(inSection: to.section) {
-                    afterTo = IndexPath(item: to.item+1, section: to.section)
-                } else {
-                    afterTo = IndexPath(item: 0, section: to.section+1)
-                }
-                iterate(start: afterTo, end: max, closed: true, block: { indexPath in
-                    if indexPath != from {
-                        self.setSelected(false, for: indexPath)
-                    }
-                })
-            }
-            if min != nilPath && min.compare(from) == .orderedAscending {
-                iterate(start: min, end: from, closed: false, block: { indexPath in
-                    self.setSelected(false, for: indexPath)
-                })
-            }
-        }
-    //    fireSelectionListener()
-    }
 
     final func selectAll() {
         selectedIndices.removeAll()
