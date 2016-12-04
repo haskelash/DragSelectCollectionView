@@ -10,8 +10,28 @@ import UIKit
 
 open class DragSelectionManager: NSObject, UICollectionViewDelegate {
     private var selectedIndices = [IndexPath]()
-    private var maxSelectionCount = -1
     private weak var collectionView: UICollectionView!
+
+    /**
+     Sets a maximum number of cells that may be selected. `nil` by default.
+     Setting this value to a value of zero or lower effectively disables selection.
+     Setting this value to `nil` removes any upper limit to selection.
+     If when setting a new value, the selection manager already has a greater number
+     of cells selected, then the apporpriate number of the most recently selected cells
+     will automatically be deselected.
+     */
+    public var maxSelectionCount: Int? {
+        didSet {
+            guard let max = maxSelectionCount else { return }
+            var count = selectedIndices.count
+            while count > max {
+                let path = selectedIndices.removeLast()
+                collectionView.deselectItem(at: path, animated: true)
+                collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: path)
+                count -= 1
+            }
+        }
+    }
 
     public init(collectionView: UICollectionView) {
         self.collectionView = collectionView
@@ -24,7 +44,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         }
         if shouldSelect {
             if !selectedIndices.contains(indexPath) &&
-                (maxSelectionCount == -1 || selectedIndices.count < maxSelectionCount) {
+                (maxSelectionCount == nil || selectedIndices.count < maxSelectionCount!) {
 
                 selectedIndices.append(indexPath)
                 collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
@@ -45,8 +65,8 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         if collectionView(collectionView, shouldSelectItemAt: indexPath) {
             if let i = selectedIndices.index(of:indexPath) {
                 selectedIndices.remove(at: i)
-            } else if maxSelectionCount == -1 ||
-                selectedIndices.count < maxSelectionCount {
+            } else if maxSelectionCount == nil ||
+                selectedIndices.count < maxSelectionCount! {
                 selectedIndices.append(indexPath)
                 selectedNow = true
             }
