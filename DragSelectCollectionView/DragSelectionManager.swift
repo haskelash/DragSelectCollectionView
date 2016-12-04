@@ -70,25 +70,36 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         }
     }
 
-    final func toggleSelected(indexPath: IndexPath) -> Bool {
-        var selectedNow = false
-        if collectionView(collectionView, shouldSelectItemAt: indexPath) {
-            if let i = selectedIndices.index(of:indexPath) {
-                selectedIndices.remove(at: i)
-            } else if maxSelectionCount == nil ||
-                selectedIndices.count < maxSelectionCount! {
-                selectedIndices.append(indexPath)
-                selectedNow = true
-            }
-          //  notifyItemChanged(index)
-        }
-       // fireSelectionListener()
-        return selectedNow
-    }
+    /**
+     Changes the selected state of the cell at `indexPath`.
 
-//    internal func isIndexSelectable(indexPath: NSIndexPath) -> Bool {
-//        return true
-//    }
+     If `collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath)`
+     return `false` for this `indexPath`, and the cell is currently deselected, this method does nothing.
+
+     If `collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath)`
+     return `false` for this `indexPath`, and the cell is currently selected, this method does nothing.
+     - Parameter indexPath: the index path of the cell to toggle.
+     - Returns: the new selected state of the cell at `indexPath`.
+     `true` for selected, `false` for deselected.
+     */
+    final func toggleSelected(indexPath: IndexPath) -> Bool {
+        if let i = selectedIndices.index(of:indexPath) {
+            if collectionView(collectionView, shouldDeselectItemAt: indexPath) {
+                selectedIndices.remove(at: i)
+                collectionView.deselectItem(at: indexPath, animated: true)
+                collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: indexPath)
+                return false
+            } else { return true }
+        } else {
+            if collectionView(collectionView, shouldSelectItemAt: indexPath) &&
+            (maxSelectionCount == nil || selectedIndices.count < maxSelectionCount!) {
+                selectedIndices.append(indexPath)
+                collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+                collectionView.delegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
+                return true
+            } else { return false }
+        }
+    }
 
     private func iterate(start: IndexPath, end: IndexPath, closed: Bool, block:(_ indexPath: IndexPath)->()) {
         var current = start
