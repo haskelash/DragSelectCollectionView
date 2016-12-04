@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B36B9E71DF4B52800CD274A /* DragSelectionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36B9E61DF4B52800CD274A /* DragSelectionManagerTests.swift */; };
 		8B87F2FC1DE14A5A00E54941 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B87F2FB1DE14A5A00E54941 /* AppDelegate.swift */; };
 		8B87F2FE1DE14A5A00E54941 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B87F2FD1DE14A5A00E54941 /* ViewController.swift */; };
 		8B87F3011DE14A5A00E54941 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B87F2FF1DE14A5A00E54941 /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8B36B9E61DF4B52800CD274A /* DragSelectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragSelectionManagerTests.swift; sourceTree = "<group>"; };
 		8B87F2F91DE14A5A00E54941 /* DragSelectCollectionViewTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DragSelectCollectionViewTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B87F2FB1DE14A5A00E54941 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B87F2FD1DE14A5A00E54941 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				8BF3DFCA1DE149BC0074BCF0 /* DragSelectCollectionViewTests.swift */,
+				8B36B9E61DF4B52800CD274A /* DragSelectionManagerTests.swift */,
 				8BF3DFCC1DE149BC0074BCF0 /* Info.plist */,
 			);
 			path = DragSelectCollectionViewTests;
@@ -360,6 +363,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B36B9E71DF4B52800CD274A /* DragSelectionManagerTests.swift in Sources */,
 				8BF3DFCB1DE149BC0074BCF0 /* DragSelectCollectionViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
