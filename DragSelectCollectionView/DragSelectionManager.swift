@@ -11,7 +11,7 @@ import UIKit
 open class DragSelectionManager: NSObject, UICollectionViewDelegate {
     private var selectedIndices = [IndexPath]()
     private var maxSelectionCount = -1
-    private weak var collectionView: UICollectionView?
+    private weak var collectionView: UICollectionView!
 
     public init(collectionView: UICollectionView) {
         self.collectionView = collectionView
@@ -19,7 +19,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
 
     final func setSelected(indexPath: IndexPath, selected: Bool) {
         var shouldSelect = selected
-        if !collectionView(collectionView!, shouldSelectItemAt: indexPath) {
+        if !collectionView(collectionView, shouldSelectItemAt: indexPath) {
             shouldSelect = false
         }
         if shouldSelect {
@@ -27,14 +27,14 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
                 (maxSelectionCount == -1 || selectedIndices.count < maxSelectionCount) {
 
                 selectedIndices.append(indexPath)
-                collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: [])
-                collectionView?.delegate?.collectionView?(collectionView!, didSelectItemAt: indexPath)
+                collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+                collectionView.delegate?.collectionView?(collectionView!, didSelectItemAt: indexPath)
           //      notifyItemChanged(index)
             }
         } else if let i = selectedIndices.index(of: indexPath) {
             selectedIndices.remove(at: i)
-            collectionView?.deselectItem(at: indexPath, animated: true)
-            collectionView?.delegate?.collectionView?(collectionView!, didDeselectItemAt: indexPath)
+            collectionView.deselectItem(at: indexPath, animated: true)
+            collectionView.delegate?.collectionView?(collectionView!, didDeselectItemAt: indexPath)
             //             notifyItemChanged(index)
         }
        // fireSelectionListener()
@@ -42,7 +42,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
 
     final func toggleSelected(indexPath: IndexPath) -> Bool {
         var selectedNow = false
-        if collectionView(collectionView!, shouldSelectItemAt: indexPath) {
+        if collectionView(collectionView, shouldSelectItemAt: indexPath) {
             if let i = selectedIndices.index(of:indexPath) {
                 selectedIndices.remove(at: i)
             } else if maxSelectionCount == -1 ||
@@ -67,16 +67,14 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
             if last.item > 0 {
                 last = IndexPath(item: last.item-1, section: last.section)
             } else {
-                guard let itemsInPrevious = collectionView?.numberOfItems(inSection: last.section-1) else {
-                    //TODO: what if number of items are 3, 0, 3 - i.e. going back a section has 0 items but going back 2 is ok?
-                    return
-                }
+                let itemsInPrevious = collectionView.numberOfItems(inSection: last.section-1)
+                //TODO: what if number of items are 3, 0, 3 - i.e. going back a section has 0 items but going back 2 is ok?
                 last = IndexPath(item: itemsInPrevious-1, section: last.section-1)
             }
         }
         while current.compare(last) != .orderedDescending {
             block(current)
-            if collectionView!.numberOfItems(inSection: current.section) > current.item + 1 {
+            if collectionView.numberOfItems(inSection: current.section) > current.item + 1 {
                 current = IndexPath(item: current.item+1, section: current.section)
             } else {
                 current = IndexPath(item: 0, section: current.section+1)
@@ -128,7 +126,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
             if max != nilPath && max.compare(to) == .orderedDescending {
                 // Unselect items that were selected during this drag but no longer are
                 var afterTo: IndexPath!
-                if to.item + 1 < collectionView!.numberOfItems(inSection: to.section) {
+                if to.item + 1 < collectionView.numberOfItems(inSection: to.section) {
                     afterTo = IndexPath(item: to.item+1, section: to.section)
                 } else {
                     afterTo = IndexPath(item: 0, section: to.section+1)
@@ -152,7 +150,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         selectedIndices.removeAll()
 
         //TODO: check 0 sections, or 0 items in section
-        guard let sections = collectionView?.numberOfSections else { return }
+        let sections = collectionView.numberOfSections
         for section in 0 ..< sections  {
             guard let items = collectionView?.numberOfItems(inSection: section) else { continue }
             for item in 0 ..< items {
