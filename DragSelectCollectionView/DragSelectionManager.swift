@@ -48,13 +48,13 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
 
                 selectedIndices.append(indexPath)
                 collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
-                collectionView.delegate?.collectionView?(collectionView!, didSelectItemAt: indexPath)
+                collectionView.delegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
           //      notifyItemChanged(index)
             }
         } else if let i = selectedIndices.index(of: indexPath) {
             selectedIndices.remove(at: i)
             collectionView.deselectItem(at: indexPath, animated: true)
-            collectionView.delegate?.collectionView?(collectionView!, didDeselectItemAt: indexPath)
+            collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: indexPath)
             //             notifyItemChanged(index)
         }
        // fireSelectionListener()
@@ -175,10 +175,10 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
             guard let items = collectionView?.numberOfItems(inSection: section) else { continue }
             for item in 0 ..< items {
                 let path = IndexPath(item: item, section: section)
-                if collectionView(collectionView!, shouldSelectItemAt: path) {
+                if collectionView(collectionView, shouldSelectItemAt: path) {
                     selectedIndices.append(path)
                     collectionView?.selectItem(at: path, animated: true, scrollPosition: [])
-                    collectionView?.delegate?.collectionView?(collectionView!, didSelectItemAt: path)
+                    collectionView?.delegate?.collectionView?(collectionView, didSelectItemAt: path)
                 }
             }
         }
