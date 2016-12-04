@@ -33,31 +33,41 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         }
     }
 
+    ///Initializes a `DragSelectionManager` with the provided `UICollectionView`.
     public init(collectionView: UICollectionView) {
         self.collectionView = collectionView
     }
 
-    final func setSelected(indexPath: IndexPath, selected: Bool) {
-        var shouldSelect = selected
-        if !collectionView(collectionView, shouldSelectItemAt: indexPath) {
-            shouldSelect = false
+    /**
+     Tells the selection manager to set the cell at `indexPath` to `selected`.
+
+     If `collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath)`
+     return `false` for this `indexPath`, and `selected` is `true`, this method does nothing.
+
+     If `collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath)`
+     return `false` for this `indexPath`, and `selected` is `false`, this method does nothing.
+     - Parameter indexPath: the index path to select / deselect.
+     - Parameter selected: `true` to select, `false` to deselect.
+     */
+    final func setSelected(_ selected: Bool, for indexPath: IndexPath) {
+        if (!collectionView(collectionView, shouldSelectItemAt: indexPath) && selected)
+        || (!collectionView(collectionView, shouldDeselectItemAt: indexPath) && !selected) {
+            return
         }
-        if shouldSelect {
+
+        if selected {
             if !selectedIndices.contains(indexPath) &&
                 (maxSelectionCount == nil || selectedIndices.count < maxSelectionCount!) {
 
                 selectedIndices.append(indexPath)
                 collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
                 collectionView.delegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
-          //      notifyItemChanged(index)
             }
         } else if let i = selectedIndices.index(of: indexPath) {
             selectedIndices.remove(at: i)
             collectionView.deselectItem(at: indexPath, animated: true)
             collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: indexPath)
-            //             notifyItemChanged(index)
         }
-       // fireSelectionListener()
     }
 
     final func toggleSelected(indexPath: IndexPath) -> Bool {
@@ -109,7 +119,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
             // Finger is back on the initial item, unselect everything else
             iterate(start: min, end: max, closed: true, block: { indexPath in
                 if indexPath != from {
-                    self.setSelected(indexPath: indexPath, selected: false)
+                    self.setSelected(false, for: indexPath)
                 }
             })
 //            for i in min...max {
@@ -123,25 +133,25 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         if to.compare(from) == .orderedAscending {
             // When selecting from one to previous items
             iterate(start: to, end: from, closed: true, block: { indexPath in
-                self.setSelected(indexPath: indexPath, selected: true)
+                self.setSelected(true, for: indexPath)
             })
             if min != nilPath && min.compare(to) == .orderedAscending {
                 // Unselect items that were selected during this drag but no longer are
                 iterate(start: min, end: to, closed: false, block: { indexPath in
                     if indexPath != from {
-                        self.setSelected(indexPath: indexPath, selected: false)
+                        self.setSelected(false, for: indexPath)
                     }
                 })
             }
             if max != nilPath && from.compare(max) == .orderedAscending {
                 iterate(start: from, end: max, closed: true, block: { indexPath in
-                    self.setSelected(indexPath: indexPath, selected: false)
+                    self.setSelected(false, for: indexPath)
 
                 })
             }
         } else {// When selecting from one to next items
             iterate(start: from, end: to, closed: true, block: { indexPath in
-                self.setSelected(indexPath: indexPath, selected: true)
+                self.setSelected(true, for: indexPath)
             })
             if max != nilPath && max.compare(to) == .orderedDescending {
                 // Unselect items that were selected during this drag but no longer are
@@ -153,13 +163,13 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
                 }
                 iterate(start: afterTo, end: max, closed: true, block: { indexPath in
                     if indexPath != from {
-                        self.setSelected(indexPath: indexPath, selected: false)
+                        self.setSelected(false, for: indexPath)
                     }
                 })
             }
             if min != nilPath && min.compare(from) == .orderedAscending {
                 iterate(start: min, end: from, closed: false, block: { indexPath in
-                    self.setSelected(indexPath: indexPath, selected: false)
+                    self.setSelected(false, for: indexPath)
                 })
             }
         }
@@ -215,11 +225,11 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
     }
 
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        setSelected(indexPath: indexPath, selected: true)
+        setSelected(true, for: indexPath)
     }
 
     open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        setSelected(indexPath: indexPath, selected: false)
+        setSelected(false, for: indexPath)
     }
 
 }

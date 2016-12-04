@@ -100,7 +100,7 @@ public class DragSelectCollectionView: UICollectionView {
             return false
         }
 
-        selectionManager.setSelected(indexPath: selection, selected: true)
+        selectionManager.setSelected(true, for: selection)
         dragSelectActive = active
         initialSelection = selection
         lastDraggedIndex = selection
