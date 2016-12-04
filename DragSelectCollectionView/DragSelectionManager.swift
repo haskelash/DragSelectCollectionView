@@ -102,6 +102,16 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
     }
 
     /**
+     Selectes all indices from `from` until `to`, inclusive.
+     Deselects all indices from `min` up until the lower of `from` and `to`.
+     Deselects all indice from `max` down until the greater of `from` and `to`.
+     - Parameter from: the start of the selected range.
+     - Parameter to: the end of the selected range.
+     May be less than, equal to, or greater than `from`.
+     - Parameter min: the smallest index from which to deselect up until,
+     but not including, the start of the selected range.
+     - Parameter max: the greates index from which to deselect down until,
+     but not including, the end of the selected range.
      */
     final func selectRange(from: IndexPath, to: IndexPath, min: IndexPath, max: IndexPath) {
         if from.compare(to) == .orderedAscending {
