@@ -159,6 +159,8 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         }
     }
 
+    private let nilPath = IndexPath(item: -1, section: -1)
+
     private func iterate(start: IndexPath, end: IndexPath,
                          openLeft: Bool = false, openRight: Bool = false,
                          block:(_ indexPath: IndexPath)->()) {
@@ -204,8 +206,6 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
             }
         }
     }
-
-    private let nilPath = IndexPath(item: -1, section: -1)
 
     final func selectAll() {
         selectedIndices.removeAll()
