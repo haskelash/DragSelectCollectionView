@@ -9,8 +9,8 @@
 import UIKit
 
 open class DragSelectionManager: NSObject, UICollectionViewDelegate {
-    private var selectedIndices = [IndexPath]()
     private weak var collectionView: UICollectionView!
+    private(set) var selectedIndices = [IndexPath]()
 
     /**
      Sets a maximum number of cells that may be selected. `nil` by default.
@@ -235,11 +235,6 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
 
     final func getSelectedCount() -> Int {
         return selectedIndices.count
-    }
-
-    final func getSelectedIndices() -> [IndexPath] {
-        return selectedIndices
-        //TODO make sure this is actually pass by value
     }
 
     public final func isIndexSelected(_ indexPath: IndexPath) -> Bool {
