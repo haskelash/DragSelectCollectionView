@@ -14,7 +14,7 @@ class ViewController: UIViewController, UICollectionViewDataSource {
     @IBOutlet var collectionView: DragSelectCollectionView!
 
     override func viewDidLoad() {
-        collectionView.selectionManager = SampleSelectionManager(collectionView: collectionView)
+        collectionView.delegate = self
         collectionView.enableDebug()
     }
 
@@ -33,7 +33,7 @@ class ViewController: UIViewController, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! Cell
         cell.setLabelText(str: "\(indexPath.section), \(indexPath.item)")
-        if self.collectionView.selectionManager.isIndexSelected(indexPath) {
+        if cell.isSelected {
             cell.backgroundColor = UIColor(red: 1.0, green: 0.54, blue: 0.85, alpha: 1.0)
         } else {
             cell.backgroundColor = UIColor(red: 0.4, green: 0.8, blue: 1.0, alpha: 1.0)
@@ -72,19 +72,17 @@ class Cell: UICollectionViewCell {
     }
 }
 
-class SampleSelectionManager: DragSelectionManager {
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+extension ViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return indexPath.item != 20
     }
 
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        super.collectionView(collectionView, didSelectItemAt: indexPath)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         cell?.backgroundColor = UIColor(red: 1.0, green: 0.54, blue: 0.85, alpha: 1.0)
     }
 
-    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        super.collectionView(collectionView, didDeselectItemAt: indexPath)
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         cell?.backgroundColor = UIColor(red: 0.4, green: 0.8, blue: 1.0, alpha: 1.0)
     }
