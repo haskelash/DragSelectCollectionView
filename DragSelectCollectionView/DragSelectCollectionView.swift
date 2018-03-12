@@ -10,11 +10,7 @@ import UIKit
 
 public class DragSelectCollectionView: UICollectionView {
 
-    public var selectionManager: DragSelectionManager! {
-        didSet {
-            self.delegate = selectionManager
-        }
-    }
+    private var selectionManager: DragSelectionManager!
 
     private static let LOGGING = true
     private static let AUTO_SCROLL_DELAY: TimeInterval = 0.025
@@ -26,6 +22,11 @@ public class DragSelectCollectionView: UICollectionView {
     private var minReached = IndexPath(item: -1, section: -1)
     private var maxReached = IndexPath(item: -1, section: -1)
 
+    private var autoScrollVelocity: CGFloat = 0
+    private var autoScrollTimer = Timer()
+
+    private var inTopHotspot = false
+    private var inBottomHotspot = false
     private var hotspotHeight: CGFloat = 100
     private var hotspotOffsetTop: CGFloat = 0
     private var hotspotOffsetBottom: CGFloat = 0
@@ -49,17 +50,16 @@ public class DragSelectCollectionView: UICollectionView {
             return bounds.size.height - hotspotOffsetBottom
         }
     }
-    private var autoScrollVelocity: CGFloat = 0
-
-    private var autoScrollTimer = Timer()
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        selectionManager = DragSelectionManager(collectionView: self)
         allowsMultipleSelection = true
     }
 
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
+        selectionManager = DragSelectionManager(collectionView: self)
         allowsMultipleSelection = true
     }
 
@@ -75,6 +75,7 @@ public class DragSelectCollectionView: UICollectionView {
             return false
         }
 
+        //negative hotspotHeight denotes no hotspots, skip this part
         if hotspotHeight > -1 {
             DragSelectCollectionView.LOG("CollectionView height = %d",
                 args: bounds.size.height)
@@ -88,33 +89,27 @@ public class DragSelectCollectionView: UICollectionView {
             }
         }
 
-        lastDraggedIndex = IndexPath(item: -1, section: -1)
         minReached = nilIndexPath
         maxReached = nilIndexPath
 
+        //if initial selection can't be selected, don't start drag selecting
         if delegate?.collectionView?(self, shouldSelectItemAt: selection) == false {
             dragSelectActive = false
-            initialSelection = IndexPath(item: -1, section: -1)
-            lastDraggedIndex = IndexPath(item: -1, section: -1)
+            initialSelection = nilIndexPath
+            lastDraggedIndex = nilIndexPath
             DragSelectCollectionView.LOG("Index %d is not selectable.", args: [selection])
             return false
         }
 
+        //all good - start drag selecting
         selectionManager.setSelected(true, for: selection)
         dragSelectActive = active
         initialSelection = selection
         lastDraggedIndex = selection
         DragSelectCollectionView.LOG("Drag selection initialized, starting at index %d.", args: [selection])
 
-//        if fingerListener != nil {
-//            fingerListener.onDragSelectFingerAction(true)
-//        }
-
         return true
     }
-
-    private var inTopHotspot = false
-    private var inBottomHotspot = false
 
     @objc private func autoScroll() {
         if !autoScrollTimer.isValid { return }
@@ -127,7 +122,6 @@ public class DragSelectCollectionView: UICollectionView {
 
         contentOffset.y = max(min(contentOffset.y, self.contentSize.height - self.bounds.size.height), 0)
     }
-
 
     func getItemPosition(point: CGPoint) -> IndexPath {
         let path = indexPathForItem(at: point)

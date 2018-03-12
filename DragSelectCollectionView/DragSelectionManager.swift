@@ -8,9 +8,15 @@
 
 import UIKit
 
-open class DragSelectionManager: NSObject, UICollectionViewDelegate {
+internal class DragSelectionManager: NSObject {
     private weak var collectionView: UICollectionView!
-    private(set) var selectedIndices = [IndexPath]()
+    private var selectedIndices = [IndexPath]()
+    private let nilPath = IndexPath(item: -1, section: -1)
+
+    ///Initializes a `DragSelectionManager` with the provided `UICollectionView`.
+    internal init(collectionView: UICollectionView) {
+        self.collectionView = collectionView
+    }
 
     /**
      Sets a maximum number of cells that may be selected. `nil` by default.
@@ -20,7 +26,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
      of cells selected, then the apporpriate number of the most recently selected cells
      will automatically be deselected.
      */
-    public var maxSelectionCount: Int? {
+    private var maxSelectionCount: Int? {
         didSet {
             guard let max = maxSelectionCount else { return }
             var count = selectedIndices.count
@@ -33,11 +39,6 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         }
     }
 
-    ///Initializes a `DragSelectionManager` with the provided `UICollectionView`.
-    public init(collectionView: UICollectionView) {
-        self.collectionView = collectionView
-    }
-
     /**
      Tells the selection manager to set the cell at `indexPath` to `selected`.
 
@@ -48,25 +49,33 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
      return `false` for this `indexPath`, and `selected` is `false`, this method does nothing.
      - Parameter indexPath: the index path to select / deselect.
      - Parameter selected: `true` to select, `false` to deselect.
+     - Returns: the new selected state of the cell at `indexPath`.
+     `true` for selected, `false` for deselected.
      */
-    final func setSelected(_ selected: Bool, for indexPath: IndexPath) {
-        if (!collectionView(collectionView, shouldSelectItemAt: indexPath) && selected)
-        || (!collectionView(collectionView, shouldDeselectItemAt: indexPath) && !selected) {
-            return
+    @discardableResult internal func setSelected(_ selected: Bool, for indexPath: IndexPath) -> Bool {
+        if (collectionView.delegate?.collectionView?(collectionView, shouldSelectItemAt: indexPath) == false && selected)
+        || (collectionView.delegate?.collectionView?(collectionView, shouldDeselectItemAt: indexPath) == false && !selected) {
+            return selectedIndices.contains(indexPath) //return state of selection, don't do anything
         }
 
         if selected {
-            if !selectedIndices.contains(indexPath) &&
-                (maxSelectionCount == nil || selectedIndices.count < maxSelectionCount!) {
-
+            if selectedIndices.contains(indexPath) {
+                return true //already selected, don't do anything
+            } else if maxSelectionCount == nil || selectedIndices.count < maxSelectionCount! {
                 selectedIndices.append(indexPath)
                 collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
                 collectionView.delegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
+                return true //not already selected and doesn't exceed max, insert
+            } else {
+                return false //not already selected but exceeds max, don't insert
             }
         } else if let i = selectedIndices.index(of: indexPath) {
             selectedIndices.remove(at: i)
             collectionView.deselectItem(at: indexPath, animated: true)
             collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: indexPath)
+            return false //selected, remove selection
+        } else {
+            return false //already not selected, do nothing
         }
     }
 
@@ -82,22 +91,22 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
      - Returns: the new selected state of the cell at `indexPath`.
      `true` for selected, `false` for deselected.
      */
-    final func toggleSelected(indexPath: IndexPath) -> Bool {
-        if let i = selectedIndices.index(of:indexPath) {
-            if collectionView(collectionView, shouldDeselectItemAt: indexPath) {
+    @discardableResult internal func toggleSelected(indexPath: IndexPath) -> Bool {
+        if let i = selectedIndices.index(of:indexPath) { //is selected, attempt remove selection
+            if collectionView.delegate?.collectionView?(collectionView, shouldDeselectItemAt: indexPath) == true {
                 selectedIndices.remove(at: i)
                 collectionView.deselectItem(at: indexPath, animated: true)
                 collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: indexPath)
                 return false
-            } else { return true }
-        } else {
-            if collectionView(collectionView, shouldSelectItemAt: indexPath) &&
+            } else { return true } //deselection disallowed, keep selected
+        } else { //is unselected, attempt selection
+            if collectionView.delegate?.collectionView?(collectionView, shouldSelectItemAt: indexPath) == true &&
             (maxSelectionCount == nil || selectedIndices.count < maxSelectionCount!) {
                 selectedIndices.append(indexPath)
                 collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
                 collectionView.delegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
                 return true
-            } else { return false }
+            } else { return false } //selection disallowed, keep unselected
         }
     }
 
@@ -113,7 +122,7 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
      - Parameter max: the greates index from which to deselect down until,
      but not including, the end of the selected range.
      */
-    final func selectRange(from: IndexPath, to: IndexPath, min: IndexPath, max: IndexPath) {
+    internal func selectRange(from: IndexPath, to: IndexPath, min: IndexPath, max: IndexPath) {
         if from.compare(to) == .orderedAscending {
             //when selecting from first selection forwards
             iterate(start: from, end: to, block: { indexPath in
@@ -150,16 +159,15 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
                 })
             }
         } else {
-            //finger is back on first item, deselect everything else
+            //finger is back on first item, deselect everything
             iterate(start: min, end: max, block: { indexPath in
                 if indexPath != from {
                     self.setSelected(false, for: indexPath)
                 }
             })
+            print(selectedIndices)
         }
     }
-
-    private let nilPath = IndexPath(item: -1, section: -1)
 
     private func iterate(start: IndexPath, end: IndexPath,
                          openLeft: Bool = false, openRight: Bool = false,
@@ -186,12 +194,10 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
                 last = IndexPath(item: last.item-1, section: last.section)
             } else {
                 for section in stride(from: last.section-1, through: 0, by: -1) {
-                    if collectionView.numberOfItems(inSection: section) > 0 {
-                        let items = collectionView.numberOfItems(inSection: section)
-                        if items > 0 {
-                            last = IndexPath(item: items-1, section: section)
-                            break
-                        }
+                    let items = collectionView.numberOfItems(inSection: section)
+                    if items > 0 {
+                        last = IndexPath(item: items-1, section: section)
+                        break
                     }
                 }
             }
@@ -207,55 +213,37 @@ open class DragSelectionManager: NSObject, UICollectionViewDelegate {
         }
     }
 
-    final func selectAll() {
+    internal func selectAll() {
         selectedIndices.removeAll()
 
-        //TODO: check 0 sections, or 0 items in section
         let sections = collectionView.numberOfSections
         for section in 0 ..< sections  {
-            guard let items = collectionView?.numberOfItems(inSection: section) else { continue }
+            let items = collectionView.numberOfItems(inSection: section)
             for item in 0 ..< items {
                 let path = IndexPath(item: item, section: section)
-                if collectionView(collectionView, shouldSelectItemAt: path) {
+                if collectionView.delegate?.collectionView?(collectionView, shouldSelectItemAt: path) == true {
                     selectedIndices.append(path)
                     collectionView?.selectItem(at: path, animated: true, scrollPosition: [])
                     collectionView?.delegate?.collectionView?(collectionView, didSelectItemAt: path)
                 }
             }
         }
-        //  notifyDataSetChanged()
-        //  fireSelectionListener()
     }
 
-    final func clearSelected() {
-        selectedIndices.removeAll()
-    //    notifyDataSetChanged()
-    //    fireSelectionListener()
+    internal func clearSelected() {
+        for i in stride(from: selectedIndices.count-1, through: 0, by: -1) {
+            let path = selectedIndices[i]
+            selectedIndices.remove(at: i)
+            collectionView?.deselectItem(at: path, animated: true)
+            collectionView?.delegate?.collectionView?(collectionView, didDeselectItemAt: path)
+        }
     }
 
-    final func getSelectedCount() -> Int {
+    internal func getSelectedCount() -> Int {
         return selectedIndices.count
     }
 
-    public final func isIndexSelected(_ indexPath: IndexPath) -> Bool {
+    internal func isIndexSelected(_ indexPath: IndexPath) -> Bool {
         return selectedIndices.contains(indexPath)
     }
-
-
-    open func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        setSelected(true, for: indexPath)
-    }
-
-    open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        setSelected(false, for: indexPath)
-    }
-
 }
