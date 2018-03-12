@@ -57,7 +57,7 @@ public class DragSelectCollectionView: UICollectionView {
         allowsMultipleSelection = true
     }
 
-    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+    public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         selectionManager = DragSelectionManager(collectionView: self)
         allowsMultipleSelection = true
@@ -111,33 +111,13 @@ public class DragSelectCollectionView: UICollectionView {
         return true
     }
 
-    @objc private func autoScroll() {
-        if !autoScrollTimer.isValid { return }
-
-        if inTopHotspot {
-            contentOffset.y -= autoScrollVelocity
-        } else if inBottomHotspot {
-            contentOffset.y += autoScrollVelocity
-        }
-
-        contentOffset.y = max(min(contentOffset.y, self.contentSize.height - self.bounds.size.height), 0)
-    }
-
-    func getItemPosition(point: CGPoint) -> IndexPath {
-        let path = indexPathForItem(at: point)
-        return path ?? IndexPath(item: -1, section: -1)
-    }
-
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        //TODO: short circuit if no cells
-
-
         if !dragSelectActive { return }
 
         guard let pointInBounds = event?.allTouches?.first?.location(in: self) else { return }
         let point = CGPoint(x: pointInBounds.x, y: pointInBounds.y - contentOffset.y)
-        let itemPosition = getItemPosition(point: pointInBounds)
+        let pathAtPoint = getItemAtPosition(point: pointInBounds)
 
         // Check for auto-scroll hotspot
         if (hotspotHeight > -1) {
@@ -180,24 +160,23 @@ public class DragSelectCollectionView: UICollectionView {
         }
 
         // Drag selection logic
-        if itemPosition != nilIndexPath && lastDraggedIndex != itemPosition {
-            lastDraggedIndex = itemPosition
+        if pathAtPoint != nilIndexPath && pathAtPoint != lastDraggedIndex {
+            lastDraggedIndex = pathAtPoint
             if minReached == nilIndexPath { minReached = lastDraggedIndex }
             if maxReached == nilIndexPath { maxReached = lastDraggedIndex }
 
-            maxReached = maxPath(a: maxReached, b: lastDraggedIndex)
-            minReached = minPath(a: minReached, b: lastDraggedIndex)
+            maxReached = max(maxReached, lastDraggedIndex)
+            minReached = min(minReached, lastDraggedIndex)
 
-            if selectionManager != nil {
-                selectionManager.selectRange(
-                    from: initialSelection,
-                    to: lastDraggedIndex,
-                    min: minReached,
-                    max: maxReached)
-                DragSelectCollectionView.LOG(
-                    "Selecting from: %i, to: %i, min: %i, max: %i",
-                    args: [initialSelection, lastDraggedIndex, minReached, maxReached])
-            }
+            selectionManager.selectRange(
+                from: initialSelection,
+                to: lastDraggedIndex,
+                min: minReached,
+                max: maxReached)
+            DragSelectCollectionView.LOG(
+                "Selecting from: %i, to: %i, min: %i, max: %i",
+                args: [initialSelection, lastDraggedIndex, minReached, maxReached])
+
             if initialSelection == lastDraggedIndex {
                 minReached = lastDraggedIndex
                 maxReached = lastDraggedIndex
@@ -205,37 +184,31 @@ public class DragSelectCollectionView: UICollectionView {
         }
     }
 
-    //TODO: use indexpath compare func here instead
-    private func maxPath(a: IndexPath, b: IndexPath) -> IndexPath {
-        if a.section > b.section { return a }
-        else if b.section > a.section { return b }
-        else {
-            if a.item >= b.item { return a }
-            else { return b }
-        }
-    }
-
-    private func minPath(a: IndexPath, b: IndexPath) -> IndexPath {
-        if a.section < b.section { return a }
-        else if b.section < a.section { return b }
-        else {
-            if a.item <= b.item { return a }
-            else { return b }
-        }
-    }
-
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        //TODO: short circuit if no cells
         if !dragSelectActive { return }
 
         dragSelectActive = false
         inTopHotspot = false
         inBottomHotspot = false
         autoScrollTimer.invalidate()
-//        if fingerListener != nil {
-//            fingerListener.onDragSelectFingerAction(false)
-//        }
+    }
+
+    private func getItemAtPosition(point: CGPoint) -> IndexPath {
+        let path = indexPathForItem(at: point)
+        return path ?? nilIndexPath
+    }
+
+    @objc private func autoScroll() {
+        if !autoScrollTimer.isValid { return }
+
+        if inTopHotspot {
+            contentOffset.y -= autoScrollVelocity
+        } else if inBottomHotspot {
+            contentOffset.y += autoScrollVelocity
+        }
+
+        contentOffset.y = max(min(contentOffset.y, self.contentSize.height - self.bounds.size.height), 0)
     }
 
     private var debugEnabled = false
