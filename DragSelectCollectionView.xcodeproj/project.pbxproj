@@ -16,6 +16,7 @@
 		8B87F3111DE14A5A00E54941 /* DragSelectCollectionViewTestAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B87F3101DE14A5A00E54941 /* DragSelectCollectionViewTestAppUITests.swift */; };
 		8B87F31B1DE14BFE00E54941 /* DragSelectCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B87F3191DE14BFE00E54941 /* DragSelectCollectionView.swift */; };
 		8B87F31C1DE14BFE00E54941 /* DragSelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B87F31A1DE14BFE00E54941 /* DragSelectionManager.swift */; };
+		8BD8C47F2056F7B700C41F32 /* DragSelectCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF3DFBC1DE149BC0074BCF0 /* DragSelectCollectionView.framework */; };
 		8BF3DFC61DE149BC0074BCF0 /* DragSelectCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF3DFBC1DE149BC0074BCF0 /* DragSelectCollectionView.framework */; };
 		8BF3DFCB1DE149BC0074BCF0 /* DragSelectCollectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF3DFCA1DE149BC0074BCF0 /* DragSelectCollectionViewTests.swift */; };
 		8BF3DFCD1DE149BC0074BCF0 /* DragSelectCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BF3DFBF1DE149BC0074BCF0 /* DragSelectCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -65,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BD8C47F2056F7B700C41F32 /* DragSelectCollectionView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +117,13 @@
 			path = DragSelectCollectionViewTestAppUITests;
 			sourceTree = "<group>";
 		};
+		8BD8C47E2056F7B700C41F32 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8BF3DFB21DE149BC0074BCF0 = {
 			isa = PBXGroup;
 			children = (
@@ -123,6 +132,7 @@
 				8BF3DFC91DE149BC0074BCF0 /* DragSelectCollectionViewTests */,
 				8B87F30F1DE14A5A00E54941 /* DragSelectCollectionViewTestAppUITests */,
 				8BF3DFBD1DE149BC0074BCF0 /* Products */,
+				8BD8C47E2056F7B700C41F32 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -633,6 +643,7 @@
 				8B87F3141DE14A5A00E54941 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8B87F3181DE14A5A00E54941 /* Build configuration list for PBXNativeTarget "DragSelectCollectionViewTestAppUITests" */ = {
 			isa = XCConfigurationList;
@@ -641,6 +652,7 @@
 				8B87F3161DE14A5A00E54941 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8BF3DFB61DE149BC0074BCF0 /* Build configuration list for PBXProject "DragSelectCollectionView" */ = {
 			isa = XCConfigurationList;
