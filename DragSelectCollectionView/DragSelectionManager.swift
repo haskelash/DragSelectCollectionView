@@ -137,7 +137,7 @@ internal class DragSelectionManager: NSObject {
             }
         } else if from.compare(to) == .orderedDescending {
             //when selecting from first selection backwards
-            iterate(start: to, end: from, block: { indexPath in
+            iterate(start: to, end: from, forward: false, block: { indexPath in
                 self.setSelected(true, for: indexPath)
             })
             if min != nilPath && min.compare(to) == .orderedAscending {
@@ -165,18 +165,18 @@ internal class DragSelectionManager: NSObject {
 
     private func iterate(start: IndexPath, end: IndexPath,
                          openLeft: Bool = false, openRight: Bool = false,
-                         block:(_ indexPath: IndexPath)->()) {
+                         forward: Bool = true, block:(_ indexPath: IndexPath)->()) {
 
-        var current = start
-        var last = end
+        var left = start
+        var right = end
 
         if openLeft {
-            if current.item + 1 < collectionView.numberOfItems(inSection: current.section) {
-                current = IndexPath(item: current.item+1, section: current.section)
+            if left.item + 1 < collectionView.numberOfItems(inSection: left.section) {
+                left = IndexPath(item: left.item+1, section: left.section)
             } else {
-                for section in current.section+1..<collectionView.numberOfSections {
+                for section in left.section+1..<collectionView.numberOfSections {
                     if collectionView.numberOfItems(inSection: section) > 0 {
-                        current = IndexPath(item: 0, section: section)
+                        left = IndexPath(item: 0, section: section)
                         break
                     }
                 }
@@ -184,25 +184,42 @@ internal class DragSelectionManager: NSObject {
         }
 
         if openRight {
-            if last.item > 0 {
-                last = IndexPath(item: last.item-1, section: last.section)
+            if right.item > 0 {
+                right = IndexPath(item: right.item-1, section: right.section)
             } else {
-                for section in stride(from: last.section-1, through: 0, by: -1) {
+                for section in stride(from: right.section-1, through: 0, by: -1) {
                     let items = collectionView.numberOfItems(inSection: section)
                     if items > 0 {
-                        last = IndexPath(item: items-1, section: section)
+                        right = IndexPath(item: items-1, section: section)
                         break
                     }
                 }
             }
         }
 
-        while current.compare(last) != .orderedDescending {
-            block(current)
-            if collectionView.numberOfItems(inSection: current.section) > current.item + 1 {
-                current = IndexPath(item: current.item+1, section: current.section)
-            } else {
-                current = IndexPath(item: 0, section: current.section+1)
+        if forward {
+            while left.compare(right) != .orderedDescending {
+                block(left)
+                if collectionView.numberOfItems(inSection: left.section) > left.item + 1 {
+                    left = IndexPath(item: left.item+1, section: left.section)
+                } else {
+                    left = IndexPath(item: 0, section: left.section+1)
+                }
+            }
+        } else {
+            while right.compare(left) != .orderedAscending {
+                block(right)
+                if right.item > 0 {
+                    right = IndexPath(item: right.item-1, section: right.section)
+                } else {
+                    for section in stride(from: right.section-1, through: 0, by: -1) {
+                        let items = collectionView.numberOfItems(inSection: section)
+                        if items > 0 {
+                            right = IndexPath(item: items-1, section: section)
+                            break
+                        }
+                    }
+                }
             }
         }
     }
