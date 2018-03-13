@@ -120,12 +120,10 @@ internal class DragSelectionManager: NSObject {
     internal func selectRange(from: IndexPath, to: IndexPath, min: IndexPath, max: IndexPath) {
         if from.compare(to) == .orderedAscending {
             //when selecting from first selection forwards
-            iterate(start: from, end: to, block: { indexPath in
-                self.setSelected(true, for: indexPath)
-            })
             if max != nilPath && to.compare(max) == .orderedAscending {
                 //deselect items after current selection
-                iterate(start: to, end: max, openLeft: true, block: { indexPath in
+                iterate(start: to, end: max, openLeft: true,
+                        forward: false, block: { indexPath in
                     self.setSelected(false, for: indexPath)
                 })
             }
@@ -135,11 +133,12 @@ internal class DragSelectionManager: NSObject {
                     self.setSelected(false, for: indexPath)
                 })
             }
-        } else if from.compare(to) == .orderedDescending {
-            //when selecting from first selection backwards
-            iterate(start: to, end: from, forward: false, block: { indexPath in
+            //select everything between first and current
+            iterate(start: from, end: to, block: { indexPath in
                 self.setSelected(true, for: indexPath)
             })
+        } else if from.compare(to) == .orderedDescending {
+            //when selecting from first selection backwards
             if min != nilPath && min.compare(to) == .orderedAscending {
                 //deselect items before current selection
                 iterate(start: min, end: to, openRight: true, block: { indexPath in
@@ -148,11 +147,16 @@ internal class DragSelectionManager: NSObject {
             }
             if max != nilPath && from.compare(max) == .orderedAscending {
                 //deselect items after first selection
-                iterate(start: from, end: max, openLeft: true, block: { indexPath in
+                iterate(start: from, end: max, openLeft: true,
+                        forward: false, block: { indexPath in
                     self.setSelected(false, for: indexPath)
 
                 })
             }
+            //select everything between first and current
+            iterate(start: to, end: from, forward: false, block: { indexPath in
+                self.setSelected(true, for: indexPath)
+            })
         } else {
             //finger is back on first item, deselect everything
             iterate(start: min, end: max, block: { indexPath in
