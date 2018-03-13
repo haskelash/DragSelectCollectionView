@@ -36,6 +36,25 @@ public class DragSelectCollectionView: UICollectionView {
         didSet { updateHotspotViews() }
     }
 
+    ///Padding between top of collection view and top hotspot. Defaults to `0`.
+    public var hotspotOffsetTop: CGFloat = 0 {
+        didSet { updateHotspotViews() }
+    }
+
+    ///Padding between bottom of collection view and bottom hotspot. Defaults to `0`.
+    public var hotspotOffsetBottom: CGFloat = 0 {
+        didSet { updateHotspotViews() }
+    }
+
+    /**
+     Used to calculate auto scroll speed. Defaults to `0.5`.
+     Auto scroll speed is calculated as `baseAutoScrollVelocity` times however many points
+     into the hotspot the user has touched, per `0.025` seconds. For example, if the user has
+     traversed `5` points from the middle of the screen into either of the hotspot, and this value is `0.5`,
+     then the velocity will be `0.5 * 5 / 0.025 = 100` points/second.
+     */
+    public var baseAutoScrollVelocity: CGFloat = 0.5
+
     public override var bounds: CGRect {
         didSet {
             updateHotspotViews()
@@ -146,7 +165,7 @@ public class DragSelectCollectionView: UICollectionView {
                         target: self, selector: #selector(autoScroll),
                         userInfo: nil, repeats: true)
                 }
-                autoScrollVelocity = 0.5 * (hotspotTopBoundEnd - point.y)
+                autoScrollVelocity = baseAutoScrollVelocity * (hotspotTopBoundEnd - point.y)
                 DragSelectCollectionView.LOG("Auto scroll velocity = %d", args: autoScrollVelocity)
 
             } else if point.y >= hotspotBottomBoundStart && point.y <= hotspotBottomBoundEnd {
@@ -161,7 +180,7 @@ public class DragSelectCollectionView: UICollectionView {
                         target: self, selector: #selector(autoScroll),
                         userInfo: nil, repeats: true)
                 }
-                autoScrollVelocity = 0.5 * (point.y - hotspotBottomBoundStart)
+                autoScrollVelocity = baseAutoScrollVelocity * (point.y - hotspotBottomBoundStart)
                 DragSelectCollectionView.LOG("Auto scroll velocity = %d", args: autoScrollVelocity)
 
             } else if inTopHotspot || inBottomHotspot {
@@ -250,8 +269,6 @@ public class DragSelectCollectionView: UICollectionView {
 
     private var inTopHotspot = false
     private var inBottomHotspot = false
-    private var hotspotOffsetTop: CGFloat = 0
-    private var hotspotOffsetBottom: CGFloat = 0
     private var hotspotTopBoundStart: CGFloat {
         get {
             return hotspotOffsetTop
