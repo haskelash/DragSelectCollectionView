@@ -10,46 +10,59 @@ import UIKit
 
 public class DragSelectCollectionView: UICollectionView {
 
-    private var selectionManager: DragSelectionManager!
+    //MARK: PUBLIC PROPERTIES
 
-    private static let LOGGING = true
-    private static let AUTO_SCROLL_DELAY: TimeInterval = 0.025
-
-    private var nilIndexPath = IndexPath(item: -1, section: -1)
-    private var lastDraggedIndex = IndexPath(item: -1, section: -1)
-    private var initialSelection = IndexPath(item: -1, section: -1)
-    private var dragSelectActive = false
-    private var minReached = IndexPath(item: -1, section: -1)
-    private var maxReached = IndexPath(item: -1, section: -1)
-
-    private var autoScrollVelocity: CGFloat = 0
-    private var autoScrollTimer = Timer()
-
-    private var inTopHotspot = false
-    private var inBottomHotspot = false
-    private var hotspotHeight: CGFloat = 100
-    private var hotspotOffsetTop: CGFloat = 0
-    private var hotspotOffsetBottom: CGFloat = 0
-    private var hotspotTopBoundStart: CGFloat {
+    /**
+     Sets a maximum number of cells that may be selected, `nil` by default.
+     Setting this value to a value of `0` or lower effectively disables selection.
+     Setting this value to `nil` removes any upper limit to selection.
+     If when setting a new value, the collection view already has a greater number
+     of cells selected, then the apporpriate number of cells will be deselected from the end of the list.
+     */
+    public var selectionLimit: Int? {
         get {
-            return hotspotOffsetTop
+            return selectionManager.maxSelectionCount
+        }
+        set {
+            selectionManager.maxSelectionCount = newValue
         }
     }
-    private var hotspotTopBoundEnd: CGFloat {
-        get {
-            return hotspotOffsetTop + hotspotHeight
+
+    /**
+     Height of top and bottom hotspots for auto scrolling.
+     Defaults to `100`. Set this to `0` to disable auto scrolling.
+     */
+    public var hotspotHeight: CGFloat = 100 {
+        didSet { updateHotspotViews() }
+    }
+
+    public override var bounds: CGRect {
+        didSet {
+            updateHotspotViews()
         }
     }
-    private var hotspotBottomBoundStart: CGFloat {
-        get {
-            return bounds.size.height - hotspotOffsetBottom - hotspotHeight
+
+    ///Toggles selection and scrolling information output to console. Defaults to `false`.
+    public static var logging = false
+
+    /**
+     Toggles whether to show a faded green view where the hotspots are.
+     Defaults to `false`. Useful for debugging.
+     */
+    public var showHotspots = false { didSet {
+        if showHotspots {
+            if oldValue == true { return }
+            updateHotspotViews()
+            addSubview(hotspotTopView)
+            addSubview(hotspotBottomView)
+        } else {
+            if oldValue == false { return }
+            hotspotTopView.removeFromSuperview()
+            hotspotBottomView.removeFromSuperview()
         }
-    }
-    private var hotspotBottomBoundEnd: CGFloat {
-        get {
-            return bounds.size.height - hotspotOffsetBottom
-        }
-    }
+    }}
+
+    //MARK: PUBLIC METHODS
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -63,14 +76,14 @@ public class DragSelectCollectionView: UICollectionView {
         allowsMultipleSelection = true
     }
 
-    private static func LOG(_ message: String, args: CVarArg...) {
-        if !LOGGING { return }
-        print("DragSelectCollectionView, \(String(format: message, args))")
-    }
-
-
-    public func setDragSelectActive(_ active: Bool, initialSelection selection: IndexPath) -> Bool {
-        if active && dragSelectActive {
+    /**
+     Attempts to begin drag selection at the provided index path.
+     - Parameter selection: the index path at which to begin drag selection.
+     - Returns: `false` if drag selection is alreay in progress or `selection` cannot
+     be selected (decided by the `UICollectionViewDelegate`), `true` otherwise.
+     */
+    public func beginDragSelection(at selection: IndexPath) -> Bool {
+        if dragSelectActive {
             DragSelectCollectionView.LOG("Drag selection is already active.")
             return false
         }
@@ -78,13 +91,13 @@ public class DragSelectCollectionView: UICollectionView {
         //negative hotspotHeight denotes no hotspots, skip this part
         if hotspotHeight > -1 {
             DragSelectCollectionView.LOG("CollectionView height = %d",
-                args: bounds.size.height)
+                                         args: bounds.size.height)
             DragSelectCollectionView.LOG("Hotspot top bound = %d to %d",
-                args: hotspotTopBoundStart, hotspotTopBoundEnd)
+                                         args: hotspotTopBoundStart, hotspotTopBoundEnd)
             DragSelectCollectionView.LOG("Hotspot bottom bound = %d to %d",
-                args: hotspotBottomBoundStart, hotspotBottomBoundEnd)
+                                         args: hotspotBottomBoundStart, hotspotBottomBoundEnd)
 
-            if debugEnabled {
+            if showHotspots {
                 setNeedsDisplay()
             }
         }
@@ -103,7 +116,7 @@ public class DragSelectCollectionView: UICollectionView {
 
         //all good - start drag selecting
         selectionManager.setSelected(true, for: selection)
-        dragSelectActive = active
+        dragSelectActive = true
         initialSelection = selection
         lastDraggedIndex = selection
         DragSelectCollectionView.LOG("Drag selection initialized, starting at index %d.", args: [selection])
@@ -129,7 +142,7 @@ public class DragSelectCollectionView: UICollectionView {
 
                     autoScrollTimer.invalidate()
                     autoScrollTimer = Timer.scheduledTimer(
-                        timeInterval: DragSelectCollectionView.AUTO_SCROLL_DELAY,
+                        timeInterval: autoScrollDelay,
                         target: self, selector: #selector(autoScroll),
                         userInfo: nil, repeats: true)
                 }
@@ -144,7 +157,7 @@ public class DragSelectCollectionView: UICollectionView {
 
                     autoScrollTimer.invalidate()
                     autoScrollTimer = Timer.scheduledTimer(
-                        timeInterval: DragSelectCollectionView.AUTO_SCROLL_DELAY,
+                        timeInterval: autoScrollDelay,
                         target: self, selector: #selector(autoScroll),
                         userInfo: nil, repeats: true)
                 }
@@ -188,10 +201,83 @@ public class DragSelectCollectionView: UICollectionView {
         super.touchesEnded(touches, with: event)
         if !dragSelectActive { return }
 
+        //edge case - if user drags back to initial selection, keep that selected
+        //it gets deselected by super.touchesEnded() above
+        if initialSelection == lastDraggedIndex {
+            selectionManager.setSelected(true, for: initialSelection)
+        }
+
         dragSelectActive = false
         inTopHotspot = false
         inBottomHotspot = false
         autoScrollTimer.invalidate()
+    }
+
+    /**
+     Attempts to select all items, starting from the first item in the collection.
+     If an item cannot be selected (decided by the `UICollectionViewDelegate`), the item is skipped.
+     If `selectionLimit` is reached, this method terminates.
+     The `collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)`
+     method of the `UICollectionViewDelegate` is called for each selected item.
+     */
+    public func selectAll() {
+        selectionManager.selectAll()
+    }
+
+    /**
+     Deselects all selected items.
+     The `collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath)`
+     method of the `UICollectionViewDelegate` is called for each deselected item.
+     */
+    public func deselectAll() {
+        selectionManager.deselectAll()
+    }
+
+    //MARK: PRIVATE PROPERTIES
+
+    private var selectionManager: DragSelectionManager!
+
+    private var dragSelectActive = false
+    private var nilIndexPath = IndexPath(item: -1, section: -1)
+    private var initialSelection = IndexPath(item: -1, section: -1)
+    private var lastDraggedIndex = IndexPath(item: -1, section: -1)
+    private var minReached = IndexPath(item: -1, section: -1)
+    private var maxReached = IndexPath(item: -1, section: -1)
+
+    private var autoScrollTimer = Timer()
+    private var autoScrollVelocity: CGFloat = 0
+    private let autoScrollDelay: TimeInterval = 0.025
+
+    private var inTopHotspot = false
+    private var inBottomHotspot = false
+    private var hotspotOffsetTop: CGFloat = 0
+    private var hotspotOffsetBottom: CGFloat = 0
+    private var hotspotTopBoundStart: CGFloat {
+        get {
+            return hotspotOffsetTop
+        }
+    }
+    private var hotspotTopBoundEnd: CGFloat {
+        get {
+            return hotspotOffsetTop + hotspotHeight
+        }
+    }
+    private var hotspotBottomBoundStart: CGFloat {
+        get {
+            return bounds.size.height - hotspotOffsetBottom - hotspotHeight
+        }
+    }
+    private var hotspotBottomBoundEnd: CGFloat {
+        get {
+            return bounds.size.height - hotspotOffsetBottom
+        }
+    }
+
+    //MARK: PRIVATE METHODS
+
+    private static func LOG(_ message: String, args: CVarArg...) {
+        if !logging { return }
+        print("DragSelectCollectionView, \(String(format: message, args))")
     }
 
     private func getItemAtPosition(point: CGPoint) -> IndexPath {
@@ -211,45 +297,20 @@ public class DragSelectCollectionView: UICollectionView {
         contentOffset.y = max(min(contentOffset.y, self.contentSize.height - self.bounds.size.height), 0)
     }
 
-    private var debugEnabled = false
-    private var debugTopView = DragSelectCollectionView.newDebugView()
-    private var debugBottomView = DragSelectCollectionView.newDebugView()
+    //MARK: HOTSPOT DEBUGGING
 
-    private class func newDebugView() -> UIView {
+    private var hotspotTopView = DragSelectCollectionView.newHotspotView()
+    private var hotspotBottomView = DragSelectCollectionView.newHotspotView()
+
+    private class func newHotspotView() -> UIView {
         let view = UIView()
         view.backgroundColor = UIColor.green
         view.alpha = 0.5
         return view
     }
 
-    public final func enableDebug() {
-        if debugEnabled { return }
-
-        debugEnabled = true
-        updateDebugViews()
-
-        addSubview(debugTopView)
-        addSubview(debugBottomView)
-    }
-
-    public final func disableDebug() {
-        if !debugEnabled { return }
-
-        debugEnabled = false
-
-        debugTopView.removeFromSuperview()
-        debugBottomView.removeFromSuperview()
-    }
-
-    private func updateDebugViews() {
-        if !debugEnabled { return }
-        debugTopView.frame = CGRect(x: 0, y: contentOffset.y+hotspotTopBoundStart, width: bounds.width, height: hotspotHeight)
-        debugBottomView.frame = CGRect(x: 0, y: contentOffset.y+hotspotBottomBoundStart, width: bounds.width, height: hotspotHeight)
-    }
-
-    public override var bounds: CGRect {
-        didSet {
-            updateDebugViews()
-        }
+    private func updateHotspotViews() {
+        hotspotTopView.frame = CGRect(x: 0, y: contentOffset.y+hotspotTopBoundStart, width: bounds.width, height: hotspotHeight)
+        hotspotBottomView.frame = CGRect(x: 0, y: contentOffset.y+hotspotBottomBoundStart, width: bounds.width, height: hotspotHeight)
     }
 }
