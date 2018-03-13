@@ -12,11 +12,6 @@ internal class DragSelectionManager: NSObject {
     private weak var collectionView: UICollectionView!
     private let nilPath = IndexPath(item: -1, section: -1)
 
-    ///Initializes a `DragSelectionManager` with the provided `UICollectionView`.
-    internal init(collectionView: UICollectionView) {
-        self.collectionView = collectionView
-    }
-
     /**
      Sets a maximum number of cells that may be selected. `nil` by default.
      Setting this value to a value of zero or lower effectively disables selection.
@@ -35,6 +30,11 @@ internal class DragSelectionManager: NSObject {
                 collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: path)
             }
         }
+    }
+
+    ///Initializes a `DragSelectionManager` with the provided `UICollectionView`.
+    internal init(collectionView: UICollectionView) {
+        self.collectionView = collectionView
     }
 
     /**
@@ -166,6 +166,49 @@ internal class DragSelectionManager: NSObject {
         }
     }
 
+    /**
+     Attempts to select all items, starting from the first item in the collection.
+     If an item cannot be selected (decided by the `UICollectionViewDelegate`), the item is skipped.
+     If `selectionLimit` is reached, this method terminates.
+     The `collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)`
+     method of the `UICollectionViewDelegate` is called for each selected item.
+     */
+    internal func selectAll() {
+        let sections = collectionView.numberOfSections
+        for section in 0 ..< sections  {
+            let items = collectionView.numberOfItems(inSection: section)
+            for item in 0 ..< items {
+                if let max = maxSelectionCount,
+                    collectionView.indexPathsForSelectedItems?.count ?? 0 >= max {
+                    return //selection limit reached
+                }
+                let path = IndexPath(item: item, section: section)
+                if collectionView.indexPathsForSelectedItems?.contains(path) == true {
+                    continue //path is already selected
+                }
+                if collectionView.delegate?.collectionView?(collectionView, shouldSelectItemAt: path) == false {
+                    continue //selection disallowed
+                }
+                collectionView?.selectItem(at: path, animated: true, scrollPosition: [])
+                collectionView?.delegate?.collectionView?(collectionView, didSelectItemAt: path)
+            }
+        }
+    }
+
+    /**
+     Deselects all selected items.
+     The `collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath)`
+     method of the `UICollectionViewDelegate` is called for each deselected item.
+     */
+    internal func deselectAll() {
+        guard let indices = collectionView.indexPathsForSelectedItems else { return }
+        for i in stride(from: indices.count-1, through: 0, by: -1) {
+            let path = indices[i]
+            collectionView?.deselectItem(at: path, animated: true)
+            collectionView?.delegate?.collectionView?(collectionView, didDeselectItemAt: path)
+        }
+    }
+
     private func iterate(start: IndexPath, end: IndexPath,
                          openLeft: Bool = false, openRight: Bool = false,
                          forward: Bool = true, block:(_ indexPath: IndexPath)->()) {
@@ -224,29 +267,6 @@ internal class DragSelectionManager: NSObject {
                     }
                 }
             }
-        }
-    }
-
-    internal func selectAll() {
-        let sections = collectionView.numberOfSections
-        for section in 0 ..< sections  {
-            let items = collectionView.numberOfItems(inSection: section)
-            for item in 0 ..< items {
-                let path = IndexPath(item: item, section: section)
-                if collectionView.delegate?.collectionView?(collectionView, shouldSelectItemAt: path) == true {
-                    collectionView?.selectItem(at: path, animated: true, scrollPosition: [])
-                    collectionView?.delegate?.collectionView?(collectionView, didSelectItemAt: path)
-                }
-            }
-        }
-    }
-
-    internal func clearSelected() {
-        guard let indices = collectionView.indexPathsForSelectedItems else { return }
-        for i in stride(from: indices.count-1, through: 0, by: -1) {
-            let path = indices[i]
-            collectionView?.deselectItem(at: path, animated: true)
-            collectionView?.delegate?.collectionView?(collectionView, didDeselectItemAt: path)
         }
     }
 }
