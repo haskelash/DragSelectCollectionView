@@ -27,13 +27,12 @@ internal class DragSelectionManager: NSObject {
      */
     internal var maxSelectionCount: Int? {
         didSet {
-            guard let max = maxSelectionCount else { return }
-            var count = collectionView.indexPathsForSelectedItems?.count ?? 0
-            while count > max {
-                guard let path = collectionView.indexPathsForSelectedItems?.last else { continue }
+            guard let maxSelectionCount = maxSelectionCount else { return }
+            guard var sorted = collectionView.indexPathsForSelectedItems?.sorted() else { return }
+            while sorted.count > max(maxSelectionCount, 0) {
+                let path = sorted.removeLast()
                 collectionView.deselectItem(at: path, animated: true)
                 collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: path)
-                count -= 1
             }
         }
     }
