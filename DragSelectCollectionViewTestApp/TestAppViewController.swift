@@ -9,7 +9,7 @@
 import UIKit
 import DragSelectCollectionView
 
-class ViewController: UIViewController {
+class TestAppViewController: UIViewController {
 
     //MARK: PROPERTIES
 
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
 
 //MARK: UICollectionViewDataSource
 
-extension ViewController: UICollectionViewDataSource {
+extension TestAppViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 20
     }
@@ -74,7 +74,7 @@ extension ViewController: UICollectionViewDataSource {
 
 //MARK: UICollectionViewDelegate
 
-extension ViewController: UICollectionViewDelegate {
+extension TestAppViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         cell.backgroundColor = cell.isSelected ? #colorLiteral(red: 1, green: 0.5411764706, blue: 0.8509803922, alpha: 1) : #colorLiteral(red: 0.4, green: 0.8, blue: 1, alpha: 1)
     }
@@ -101,7 +101,7 @@ extension ViewController: UICollectionViewDelegate {
 
 //MARK: UICollectionViewDelegateFlowLayout
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
+extension TestAppViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -133,7 +133,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension ViewController: UIPopoverPresentationControllerDelegate {
+extension TestAppViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController,
                                    traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none

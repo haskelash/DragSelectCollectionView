@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Test App View Controller-->
         <scene sceneID="ev1-NW-B2v">
             <objects>
-                <viewController id="YAu-34-5hx" customClass="ViewController" customModule="DragSelectCollectionViewTestApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="YAu-34-5hx" customClass="TestAppViewController" customModule="DragSelectCollectionViewTestApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yS0-0e-N19"/>
                         <viewControllerLayoutGuide type="bottom" id="dzU-cT-EmM"/>

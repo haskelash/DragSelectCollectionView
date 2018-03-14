@@ -13,7 +13,7 @@ class SettingsViewController: UITableViewController {
 
     //MARK: PROPERTIES
 
-    var testAppVC: ViewController!
+    var testAppVC: TestAppViewController!
     @IBOutlet var hotspotsSwitch: UISwitch!
 
     @IBOutlet var hotspotHeightLabel: UILabel!
