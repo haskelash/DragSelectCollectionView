@@ -9,81 +9,143 @@
 import UIKit
 import DragSelectCollectionView
 
-class ViewController: UIViewController, UICollectionViewDataSource {
+class ViewController: UIViewController {
+
+    //MARK: PROPERTIES
 
     @IBOutlet var collectionView: DragSelectCollectionView!
+    @IBOutlet var countLabel: UIBarButtonItem!
+    var selectionCount = 0
 
-    override func viewDidLoad() {
-        collectionView.delegate = self
-        collectionView.enableDebug()
-    }
+    //MARK: FUNCTIONS
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 10
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 36
-    }
-
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        return collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! Cell
-        cell.setLabelText(str: "\(indexPath.section), \(indexPath.item)")
-        if cell.isSelected {
-            cell.backgroundColor = UIColor(red: 1.0, green: 0.54, blue: 0.85, alpha: 1.0)
-        } else {
-            cell.backgroundColor = UIColor(red: 0.4, green: 0.8, blue: 1.0, alpha: 1.0)
-        }
-        return cell
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        segue.destination.presentationController?.delegate = self
+        (segue.destination as? SettingsViewController)?.testAppVC = self
     }
 
     @IBAction func longPress(with gr: UILongPressGestureRecognizer) {
-        if gr.state == .began {
-            let point = gr.location(in: collectionView)
-            if let path = collectionView.indexPathForItem(at: point) {
-                if !collectionView.setDragSelectActive(true, initialSelection: path) {
-                    print("Drag selection could not be activated")
-                }
+        guard gr.state == .began else { return }
+        let point = gr.location(in: collectionView)
+        if let path = collectionView.indexPathForItem(at: point) {
+            if !collectionView.beginDragSelection(at: path) {
+                print("Drag selection could not be activated")
+            }
+        }
+    }
+
+    var disablePrimeCells = false {
+        didSet {
+            if disablePrimeCells == false { return }
+            for path in collectionView.indexPathsForSelectedItems ?? [] {
+                if !path.item.isInPrimes() { continue }
+                collectionView.deselectItem(at: path, animated: true)
+                collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: path)
             }
         }
     }
 }
 
+//MARK: UICollectionViewDataSource
 
-class Cell: UICollectionViewCell {
-    var label: UILabel
-
-    required init?(coder aDecoder: NSCoder) {
-        label = UILabel()
-
-        super.init(coder: aDecoder)
-
-        label.frame = bounds
-        label.textAlignment = .center
-        addSubview(label)
+extension ViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 20
     }
 
-    func setLabelText(str: String) {
-        label.text = str
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 25
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader,
+                                                                     withReuseIdentifier: "testAppHeader", for: indexPath) as! TestAppHeader
+        header.updateLabel(with: indexPath.section)
+        return header
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "testAppCell", for: indexPath) as! TestAppCell
+        cell.updateLabel(with: indexPath)
+        cell.backgroundColor = cell.isSelected ? #colorLiteral(red: 1, green: 0.5411764706, blue: 0.8509803922, alpha: 1) : #colorLiteral(red: 0.4, green: 0.8, blue: 1, alpha: 1)
+        return cell
     }
 }
 
+//MARK: UICollectionViewDelegate
+
 extension ViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        cell.backgroundColor = cell.isSelected ? #colorLiteral(red: 1, green: 0.5411764706, blue: 0.8509803922, alpha: 1) : #colorLiteral(red: 0.4, green: 0.8, blue: 1, alpha: 1)
+    }
+
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return indexPath.item != 20
+        if collectionView.indexPathsForSelectedItems?.count ?? 0 >= self.collectionView.selectionLimit ?? Int.max { return false }
+        return !disablePrimeCells || !indexPath.item.isInPrimes()
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
-        cell?.backgroundColor = UIColor(red: 1.0, green: 0.54, blue: 0.85, alpha: 1.0)
+        cell?.backgroundColor = #colorLiteral(red: 1, green: 0.5411764706, blue: 0.8509803922, alpha: 1)
+        selectionCount += 1
+        countLabel.title = "Selected: \(selectionCount)"
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
-        cell?.backgroundColor = UIColor(red: 0.4, green: 0.8, blue: 1.0, alpha: 1.0)
+        cell?.backgroundColor = #colorLiteral(red: 0.4, green: 0.8, blue: 1, alpha: 1)
+        selectionCount -= 1
+        countLabel.title = "Selected: \(selectionCount)"
+    }
+}
+
+//MARK: UICollectionViewDelegateFlowLayout
+
+extension ViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let insets = self.collectionView(collectionView, layout: collectionViewLayout,
+                                         insetForSectionAt: indexPath.section)
+        let spacing = self.collectionView(collectionView, layout: collectionViewLayout,
+                                          minimumInteritemSpacingForSectionAt: indexPath.section)
+        let numberOfCells: CGFloat = 5
+        let availableWidth = collectionView.bounds.width - insets.left - insets.right
+        let cellWidth = (availableWidth - ((numberOfCells-1) * spacing)) / numberOfCells
+        return CGSize(width: cellWidth, height: cellWidth)
+    }
+}
+
+extension ViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController,
+                                   traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
+}
+
+//MARK: OTHER
+
+let primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+              43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+extension Int {
+    func isInPrimes() -> Bool {
+        return primes.contains(self)
     }
 }
