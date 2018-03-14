@@ -1,0 +1,5 @@
+language: swift
+os: osx
+osx_image: xcode9
+script:
+  - xcodebuild test -scheme DragSelectCollectionView -destination "name=iPhone 8,OS=11.0" CODE_SIGNING_REQUIRED=NO
