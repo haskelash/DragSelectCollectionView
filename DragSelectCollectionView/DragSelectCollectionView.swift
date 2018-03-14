@@ -121,14 +121,13 @@ public class DragSelectCollectionView: UICollectionView {
             }
         }
 
-        minReached = nilIndexPath
-        maxReached = nilIndexPath
-
         //if initial selection can't be selected, don't start drag selecting
         if delegate?.collectionView?(self, shouldSelectItemAt: selection) == false {
             dragSelectActive = false
             initialSelection = nilIndexPath
             lastDraggedIndex = nilIndexPath
+            minReached = nilIndexPath
+            maxReached = nilIndexPath
             DragSelectCollectionView.LOG("Index [%i, %i] is not selectable.",
                                             args: selection.section, selection.item)
             return false
@@ -139,6 +138,8 @@ public class DragSelectCollectionView: UICollectionView {
         dragSelectActive = true
         initialSelection = selection
         lastDraggedIndex = selection
+        minReached = selection
+        maxReached = selection
         DragSelectCollectionView.LOG("Drag selection initialized, starting at index [%i, %i].",
                                         args: selection.section, selection.item)
         return true
@@ -195,8 +196,6 @@ public class DragSelectCollectionView: UICollectionView {
         // Drag selection logic
         if pathAtPoint != nilIndexPath && pathAtPoint != lastDraggedIndex {
             lastDraggedIndex = pathAtPoint
-            if minReached == nilIndexPath { minReached = lastDraggedIndex }
-            if maxReached == nilIndexPath { maxReached = lastDraggedIndex }
 
             maxReached = max(maxReached, lastDraggedIndex)
             minReached = min(minReached, lastDraggedIndex)
@@ -214,8 +213,8 @@ public class DragSelectCollectionView: UICollectionView {
                 maxReached.section, maxReached.item)
 
             if initialSelection == lastDraggedIndex {
-                minReached = lastDraggedIndex
-                maxReached = lastDraggedIndex
+                minReached = initialSelection
+                maxReached = initialSelection
             }
         }
     }
