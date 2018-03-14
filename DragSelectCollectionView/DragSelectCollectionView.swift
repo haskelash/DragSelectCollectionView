@@ -109,11 +109,11 @@ public class DragSelectCollectionView: UICollectionView {
 
         //negative hotspotHeight denotes no hotspots, skip this part
         if hotspotHeight > -1 {
-            DragSelectCollectionView.LOG("CollectionView height = %d",
+            DragSelectCollectionView.LOG("CollectionView height = %0.2f",
                                          args: bounds.size.height)
-            DragSelectCollectionView.LOG("Hotspot top bound = %d to %d",
+            DragSelectCollectionView.LOG("Hotspot top bound = %0.2f to %0.2f",
                                          args: hotspotTopBoundStart, hotspotTopBoundEnd)
-            DragSelectCollectionView.LOG("Hotspot bottom bound = %d to %d",
+            DragSelectCollectionView.LOG("Hotspot bottom bound = %0.2f to %0.2f",
                                          args: hotspotBottomBoundStart, hotspotBottomBoundEnd)
 
             if showHotspots {
@@ -129,7 +129,8 @@ public class DragSelectCollectionView: UICollectionView {
             dragSelectActive = false
             initialSelection = nilIndexPath
             lastDraggedIndex = nilIndexPath
-            DragSelectCollectionView.LOG("Index %d is not selectable.", args: [selection])
+            DragSelectCollectionView.LOG("Index [%i, %i] is not selectable.",
+                                            args: selection.section, selection.item)
             return false
         }
 
@@ -138,8 +139,8 @@ public class DragSelectCollectionView: UICollectionView {
         dragSelectActive = true
         initialSelection = selection
         lastDraggedIndex = selection
-        DragSelectCollectionView.LOG("Drag selection initialized, starting at index %d.", args: [selection])
-
+        DragSelectCollectionView.LOG("Drag selection initialized, starting at index [%i, %i].",
+                                        args: selection.section, selection.item)
         return true
     }
 
@@ -166,7 +167,7 @@ public class DragSelectCollectionView: UICollectionView {
                         userInfo: nil, repeats: true)
                 }
                 autoScrollVelocity = baseAutoScrollVelocity * (hotspotTopBoundEnd - point.y)
-                DragSelectCollectionView.LOG("Auto scroll velocity = %d", args: autoScrollVelocity)
+                DragSelectCollectionView.LOG("Auto scroll velocity = %0.2f", args: autoScrollVelocity)
 
             } else if point.y >= hotspotBottomBoundStart && point.y <= hotspotBottomBoundEnd {
                 inTopHotspot = false
@@ -181,7 +182,7 @@ public class DragSelectCollectionView: UICollectionView {
                         userInfo: nil, repeats: true)
                 }
                 autoScrollVelocity = baseAutoScrollVelocity * (point.y - hotspotBottomBoundStart)
-                DragSelectCollectionView.LOG("Auto scroll velocity = %d", args: autoScrollVelocity)
+                DragSelectCollectionView.LOG("Auto scroll velocity = %0.2f", args: autoScrollVelocity)
 
             } else if inTopHotspot || inBottomHotspot {
                 DragSelectCollectionView.LOG("Left the hotspot")
@@ -206,8 +207,11 @@ public class DragSelectCollectionView: UICollectionView {
                 min: minReached,
                 max: maxReached)
             DragSelectCollectionView.LOG(
-                "Selecting from: %i, to: %i, min: %i, max: %i",
-                args: [initialSelection, lastDraggedIndex, minReached, maxReached])
+                "Selecting from: [%i, %i], to: [%i, %i], min: [%i, %i], max: [%i, %i]",
+                args: initialSelection.section, initialSelection.item,
+                lastDraggedIndex.section, lastDraggedIndex.item,
+                minReached.section, minReached.item,
+                maxReached.section, maxReached.item)
 
             if initialSelection == lastDraggedIndex {
                 minReached = lastDraggedIndex
@@ -294,7 +298,7 @@ public class DragSelectCollectionView: UICollectionView {
 
     private static func LOG(_ message: String, args: CVarArg...) {
         if !logging { return }
-        print("DragSelectCollectionView, \(String(format: message, args))")
+        print("DragSelectCollectionView, " + String(format: message, arguments: args))
     }
 
     private func getItemAtPosition(point: CGPoint) -> IndexPath {
