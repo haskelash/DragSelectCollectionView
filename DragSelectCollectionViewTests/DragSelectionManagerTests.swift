@@ -362,7 +362,91 @@ class DragSelectionManagerTests: XCTestCase {
 
     //MARK: SELECTING ALL
 
+    func testSelectAll() {
+        //given no selected items
+
+        //when I select all items
+        selectionManager.selectAll()
+
+        //then all items should be selected
+        guard let selections = collectionView.indexPathsForSelectedItems else {
+            XCTFail("Selected indices is empty.")
+            return
+        }
+
+        for section in 0..<collectionView.numberOfSections {
+            for item in 0..<collectionView.numberOfItems(inSection: section) {
+                XCTAssert(selections.contains(IndexPath(item: item, section: section)),
+                          "Selected indices does not include [\(section), \(item)].")
+            }
+        }
+    }
+
+    func testSelectAllWhenAlreadySelected() {
+        //given an item is already selected
+        selectionManager.setSelected(true, for: IndexPath(item: 5, section: 0))
+
+        //when I select all items
+        selectionManager.selectAll()
+
+        //then that item should still be selected
+        guard let selections = collectionView.indexPathsForSelectedItems else {
+            XCTFail("Selected indices is empty.")
+            return
+        }
+
+        XCTAssert(selections.contains(IndexPath(item: 5, section: 0)),
+                  "Selected indices does not include [\(0), \(5)].")
+    }
+
+    func testSelectAllWhenExceedingLimit() {
+        //given no selected items and a selection limit of 5
+        selectionManager.maxSelectionCount = 5
+
+        //when I select all 20 items
+        selectionManager.selectAll()
+
+        //then only the first 5 items should be selected
+        guard let selections = collectionView.indexPathsForSelectedItems else {
+            XCTFail("Selected indices is empty.")
+            return
+        }
+
+        for item in 0..<5 {
+            XCTAssert(selections.contains(IndexPath(item: item, section: 0)),
+                      "Selected indices does not include [\(0), \(item)].")
+        }
+
+        for item in 5..<collectionView.numberOfItems(inSection: 0) {
+            XCTAssertFalse(selections.contains(IndexPath(item: item, section: 0)),
+                           "Selected indices does include [\(0), \(item)] when it should not.")
+        }
+    }
+
     //MARK: DESELECTING ALL
+
+    func testDeselectAll() {
+        //given some items are selected
+        (0..<5).forEach() {
+            selectionManager.setSelected(true, for: IndexPath(item: $0, section: 0))
+        }
+
+        //when I deselect all items
+        selectionManager.deselectAll()
+
+        //then those items should be deselected
+        guard let selections = collectionView.indexPathsForSelectedItems else {
+            XCTFail("Selected indices is empty.")
+            return
+        }
+
+        for section in 0..<collectionView.numberOfSections {
+            for item in 0..<collectionView.numberOfItems(inSection: section) {
+                XCTAssertFalse(selections.contains(IndexPath(item: item, section: section)),
+                               "Selected indices does include [\(section), \(item)] when it should not.")
+            }
+        }
+    }
 }
 
 class MockDataSource: NSObject, UICollectionViewDataSource {
