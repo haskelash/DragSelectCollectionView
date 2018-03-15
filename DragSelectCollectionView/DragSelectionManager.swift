@@ -76,35 +76,6 @@ internal class DragSelectionManager: NSObject {
     }
 
     /**
-     Changes the selected state of the cell at `indexPath`.
-
-     If `collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath)`
-     return `false` for this `indexPath`, and the cell is currently deselected, this method does nothing.
-
-     If `collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath)`
-     return `false` for this `indexPath`, and the cell is currently selected, this method does nothing.
-     - Parameter indexPath: the index path of the cell to toggle.
-     - Returns: the new selected state of the cell at `indexPath`.
-     `true` for selected, `false` for deselected.
-     */
-    @discardableResult internal func toggleSelected(indexPath: IndexPath) -> Bool {
-        if collectionView.indexPathsForSelectedItems?.contains(indexPath) == true { //is selected, attempt remove selection
-            if collectionView.delegate?.collectionView?(collectionView, shouldDeselectItemAt: indexPath) == true {
-                collectionView.deselectItem(at: indexPath, animated: true)
-                collectionView.delegate?.collectionView?(collectionView, didDeselectItemAt: indexPath)
-                return false
-            } else { return true } //deselection disallowed, keep selected
-        } else { //is unselected, attempt selection
-            if collectionView.delegate?.collectionView?(collectionView, shouldSelectItemAt: indexPath) == true &&
-            (maxSelectionCount == nil || collectionView.indexPathsForSelectedItems?.count ?? 0 < maxSelectionCount!) {
-                collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
-                collectionView.delegate?.collectionView?(collectionView, didSelectItemAt: indexPath)
-                return true
-            } else { return false } //selection disallowed, keep unselected
-        }
-    }
-
-    /**
      Selectes all indices from `from` until `to`, inclusive.
      Deselects all indices from `min` up until the lower of `from` and `to`.
      Deselects all indice from `max` down until the greater of `from` and `to`.
