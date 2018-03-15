@@ -157,7 +157,10 @@ internal class DragSelectionManager: NSObject {
                 self.setSelected(true, for: indexPath)
             })
         } else {
-            //finger is back on first item, deselect everything
+            //finger is back on first item, select current selection
+            self.setSelected(true, for: from)
+
+            //deselect everything except current selection
             iterate(start: min, end: max, block: { indexPath in
                 if indexPath != from {
                     self.setSelected(false, for: indexPath)
