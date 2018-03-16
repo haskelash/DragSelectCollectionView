@@ -8,7 +8,7 @@ A `UICollectionView` subclass for selecting multiple cells while dragging.
 
 Enable selecting collection view cells by dragging along the view | &nbsp; | Auto scroll when the user drags close to the top or bottom of the view | &nbsp; | You can set a limit on how many cells can be selected, e.g. a limit of 23
 :---------------------------:|--------|:----------------------------:|--------|:---------------------------:
-![dragging example](placeholder.png) | &nbsp; | ![auto scroll example](placeholder.png) | &nbsp; | ![selection limit example](placeholder.png)
+![dragging example](gifs/dragging.gif) | &nbsp; | ![auto scroll example](gifs/hotspots.gif) | &nbsp; | ![selection limit example](gifs/limit.gif)
 
 ## Customizations
 

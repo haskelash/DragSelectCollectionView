@@ -8,6 +8,7 @@ after_success:
   - jazzy
   - mkdir gh-pages
   - mv docs gh-pages/
+  - mv gifs gh-pages/
   - mv README.md gh-pages/
   - mv _config.yml gh-pages/
 deploy:
