@@ -8,9 +8,16 @@
 
 import UIKit
 
+/**
+ A `UICollectionView` subclass that enables contiuous selection of cells while dragging.
+ Use this class as you would use a regular instance of `UICollectionView`, i.e. with a
+ `UICollectionViewDataSource` and a `UICollectionViewDelegate`. Call `beginDragSelection(at:)` when
+ you want to start a continuous selection event starting at a particular `IndexPath`. Throughout the selection
+ process, this class will ask its `delegate` if it should select / deselect each cell it encounters.
+ */
 public class DragSelectCollectionView: UICollectionView {
 
-    //MARK: PUBLIC PROPERTIES
+    //MARK: Public Properties
 
     /**
      Sets a maximum number of cells that may be selected, `nil` by default.
@@ -55,6 +62,7 @@ public class DragSelectCollectionView: UICollectionView {
      */
     public var baseAutoScrollVelocity: CGFloat = 0.5
 
+    /// :nodoc:
     public override var bounds: CGRect {
         didSet {
             updateHotspotViews()
@@ -81,14 +89,16 @@ public class DragSelectCollectionView: UICollectionView {
         }
     }}
 
-    //MARK: PUBLIC METHODS
+    //MARK: Public Methods
 
+    /// :nodoc:
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         selectionManager = DragSelectionManager(collectionView: self)
         allowsMultipleSelection = true
     }
 
+    /// :nodoc:
     public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         selectionManager = DragSelectionManager(collectionView: self)
@@ -145,6 +155,7 @@ public class DragSelectCollectionView: UICollectionView {
         return true
     }
 
+    /// :nodoc:
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
         if !dragSelectActive { return }
@@ -219,6 +230,7 @@ public class DragSelectCollectionView: UICollectionView {
         }
     }
 
+    /// :nodoc:
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         if !dragSelectActive { return }
