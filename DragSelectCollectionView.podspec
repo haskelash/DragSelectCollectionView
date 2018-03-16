@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "DragSelectCollectionView"
   s.version      = "0.1.0"
-  s.summary      = "A UIViewController extension that allows for multiple selection via long press then dragging"
+  s.summary      = "A UICollectionView subclass for selecting multiple cells while dragging"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-A UIViewController extension that allows for multiple selection via long press then dragging.
+A UICollectionView subclass for selecting multiple cells while dragging
                    DESC
 
   s.homepage     = "https://github.com/haskelash/DragSelectCollectionView"
