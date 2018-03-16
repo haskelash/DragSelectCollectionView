@@ -9,6 +9,7 @@ after_success:
   - mkdir gh-pages
   - mv docs gh-pages/
   - mv README.md gh-pages/
+  - mv _config.yml gh-pages/
 deploy:
   provider: pages
   skip-cleanup: true
