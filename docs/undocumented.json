@@ -1,47 +1,6 @@
 {
   "warnings": [
-    {
-      "file": "/Users/travis/build/haskelash/DragSelectCollectionView/DragSelectCollectionView/DragSelectCollectionView.swift",
-      "line": 11,
-      "symbol": "DragSelectCollectionView",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/travis/build/haskelash/DragSelectCollectionView/DragSelectCollectionView/DragSelectCollectionView.swift",
-      "line": 58,
-      "symbol": "DragSelectCollectionView.bounds",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/travis/build/haskelash/DragSelectCollectionView/DragSelectCollectionView/DragSelectCollectionView.swift",
-      "line": 86,
-      "symbol": "DragSelectCollectionView.init(coder:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/travis/build/haskelash/DragSelectCollectionView/DragSelectCollectionView/DragSelectCollectionView.swift",
-      "line": 92,
-      "symbol": "DragSelectCollectionView.init(frame:collectionViewLayout:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/travis/build/haskelash/DragSelectCollectionView/DragSelectCollectionView/DragSelectCollectionView.swift",
-      "line": 148,
-      "symbol": "DragSelectCollectionView.touchesMoved(_:with:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/travis/build/haskelash/DragSelectCollectionView/DragSelectCollectionView/DragSelectCollectionView.swift",
-      "line": 222,
-      "symbol": "DragSelectCollectionView.touchesEnded(_:with:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    }
+
   ],
   "source_directory": "/Users/travis/build/haskelash/DragSelectCollectionView"
 }
