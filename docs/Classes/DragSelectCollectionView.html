@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DragSelectCollectionView Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/DragSelectCollectionView" class="dashAnchor"></a>
+
+    <a title="DragSelectCollectionView Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          DragSelectCollectionView Docs
+        </a>
+         (62% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/haskelash/DragSelectCollectionView">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">DragSelectCollectionView Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      DragSelectCollectionView Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../setup.html">Setup</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DragSelectCollectionView.html">DragSelectCollectionView</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>DragSelectCollectionView</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">DragSelectCollectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span></code></pre>
+
+                </div>
+              </div>
+            <p>Undocumented</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/PUBLIC%20PROPERTIES"></a>
+                <a name="//apple_ref/swift/Section/PUBLIC PROPERTIES" class="dashAnchor"></a>
+                <a href="#/PUBLIC%20PROPERTIES">
+                  <h3 class="section-name">PUBLIC PROPERTIES</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC14selectionLimitSiSgv"></a>
+                    <a name="//apple_ref/swift/Property/selectionLimit" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC14selectionLimitSiSgv">selectionLimit</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sets a maximum number of cells that may be selected, <code>nil</code> by default.
+Setting this value to a value of <code>0</code> or lower effectively disables selection.
+Setting this value to <code>nil</code> removes any upper limit to selection.
+If when setting a new value, the collection view already has a greater number
+of cells selected, then the apporpriate number of cells will be deselected from the end of the list.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">selectionLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC13hotspotHeight12CoreGraphics7CGFloatVv"></a>
+                    <a name="//apple_ref/swift/Property/hotspotHeight" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC13hotspotHeight12CoreGraphics7CGFloatVv">hotspotHeight</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Height of top and bottom hotspots for auto scrolling.
+Defaults to <code>100</code>. Set this to <code>0</code> to disable auto scrolling.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hotspotHeight</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">100</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC16hotspotOffsetTop12CoreGraphics7CGFloatVv"></a>
+                    <a name="//apple_ref/swift/Property/hotspotOffsetTop" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC16hotspotOffsetTop12CoreGraphics7CGFloatVv">hotspotOffsetTop</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Padding between top of collection view and top hotspot. Defaults to <code>0</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hotspotOffsetTop</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC19hotspotOffsetBottom12CoreGraphics7CGFloatVv"></a>
+                    <a name="//apple_ref/swift/Property/hotspotOffsetBottom" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC19hotspotOffsetBottom12CoreGraphics7CGFloatVv">hotspotOffsetBottom</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Padding between bottom of collection view and bottom hotspot. Defaults to <code>0</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hotspotOffsetBottom</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC22baseAutoScrollVelocity12CoreGraphics7CGFloatVv"></a>
+                    <a name="//apple_ref/swift/Property/baseAutoScrollVelocity" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC22baseAutoScrollVelocity12CoreGraphics7CGFloatVv">baseAutoScrollVelocity</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Used to calculate auto scroll speed. Defaults to <code>0.5</code>.
+Auto scroll speed is calculated as <code>baseAutoScrollVelocity</code> times however many points
+into the hotspot the user has touched, per <code>0.025</code> seconds. For example, if the user has
+traversed <code>5</code> points from the middle of the screen into either of the hotspot, and this value is <code>0.5</code>,
+then the velocity will be <code>0.5 * 5 / 0.025 = 100</code> points/second.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">baseAutoScrollVelocity</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mf">0.5</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(py)bounds"></a>
+                    <a name="//apple_ref/swift/Property/bounds" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(py)bounds">bounds</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC7loggingSbvZ"></a>
+                    <a name="//apple_ref/swift/Variable/logging" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC7loggingSbvZ">logging</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Toggles selection and scrolling information output to console. Defaults to <code>false</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">logging</span> <span class="o">=</span> <span class="kc">false</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC12showHotspotsSbv"></a>
+                    <a name="//apple_ref/swift/Property/showHotspots" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC12showHotspotsSbv">showHotspots</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Toggles whether to show a faded green view where the hotspots are.
+Defaults to <code>false</code>. Useful for debugging.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">showHotspots</span> <span class="o">=</span> <span class="kc">false</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/PUBLIC%20METHODS"></a>
+                <a name="//apple_ref/swift/Section/PUBLIC METHODS" class="dashAnchor"></a>
+                <a href="#/PUBLIC%20METHODS">
+                  <h3 class="section-name">PUBLIC METHODS</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)initWithCoder:"></a>
+                    <a name="//apple_ref/swift/Method/init(coder:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)initWithCoder:">init(coder:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)initWithFrame:collectionViewLayout:"></a>
+                    <a name="//apple_ref/swift/Method/init(frame:collectionViewLayout:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)initWithFrame:collectionViewLayout:">init(frame:collectionViewLayout:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="nv">frame</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">collectionViewLayout</span> <span class="nv">layout</span><span class="p">:</span> <span class="kt">UICollectionViewLayout</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC05beginA9SelectionSb10Foundation9IndexPathV2at_tF"></a>
+                    <a name="//apple_ref/swift/Method/beginDragSelection(at:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC05beginA9SelectionSb10Foundation9IndexPathV2at_tF">beginDragSelection(at:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Attempts to begin drag selection at the provided index path.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">beginDragSelection</span><span class="p">(</span><span class="n">at</span> <span class="nv">selection</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>selection</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the index path at which to begin drag selection.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>false</code> if drag selection is alreay in progress or <code>selection</code> cannot
+be selected (decided by the <code>UICollectionViewDelegate</code>), <code>true</code> otherwise.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)touchesMoved:withEvent:"></a>
+                    <a name="//apple_ref/swift/Method/touchesMoved(_:with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)touchesMoved:withEvent:">touchesMoved(_:with:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">touchesMoved</span><span class="p">(</span><span class="n">_</span> <span class="nv">touches</span><span class="p">:</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt">UITouch</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with</span> <span class="nv">event</span><span class="p">:</span> <span class="kt">UIEvent</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)touchesEnded:withEvent:"></a>
+                    <a name="//apple_ref/swift/Method/touchesEnded(_:with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@DragSelectCollectionView@objc(cs)DragSelectCollectionView(im)touchesEnded:withEvent:">touchesEnded(_:with:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">touchesEnded</span><span class="p">(</span><span class="n">_</span> <span class="nv">touches</span><span class="p">:</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt">UITouch</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">with</span> <span class="nv">event</span><span class="p">:</span> <span class="kt">UIEvent</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC9selectAllyyF"></a>
+                    <a name="//apple_ref/swift/Method/selectAll()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC9selectAllyyF">selectAll()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Attempts to select all items, starting from the first item in the collection.
+If an item cannot be selected (decided by the <code>UICollectionViewDelegate</code>), the item is skipped.
+If <code><a href="../Classes/DragSelectCollectionView.html#/s:24DragSelectCollectionViewAAC14selectionLimitSiSgv">selectionLimit</a></code> is reached, this method terminates.
+The <code>collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)</code>
+method of the <code>UICollectionViewDelegate</code> is called for each selected item.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">selectAll</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:24DragSelectCollectionViewAAC11deselectAllyyF"></a>
+                    <a name="//apple_ref/swift/Method/deselectAll()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:24DragSelectCollectionViewAAC11deselectAllyyF">deselectAll()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Deselects all selected items.
+The <code>collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath)</code>
+method of the <code>UICollectionViewDelegate</code> is called for each deselected item.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">deselectAll</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2018 <a class="link" href="https://haskelash.github.io" target="_blank" rel="external">Haskel Ash</a>. All rights reserved. (Last updated: 2018-03-16)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

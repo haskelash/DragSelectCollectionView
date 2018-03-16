@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DragSelectCollectionView  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+
+    <a title="DragSelectCollectionView  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          DragSelectCollectionView Docs
+        </a>
+         (62% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/haskelash/DragSelectCollectionView">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">DragSelectCollectionView Reference</a>
+      <img class="carat" src="img/carat.png" />
+      DragSelectCollectionView  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Guides.html">Guides</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="setup.html">Setup</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/DragSelectCollectionView.html">DragSelectCollectionView</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            
+            <h2 id='install' class='heading'>Install</h2>
+
+<p>Coming soon&hellip;</p>
+<h2 id='integrate' class='heading'>Integrate</h2>
+
+<p>Make your <code>UICollectionView</code> an instance of <code><a href="Classes/DragSelectCollectionView.html">DragSelectCollectionView</a></code>.
+Use it as you would use any other collection view, i.e. with custom data source and delegate objects.
+Add a <code>UILongPressGestureRecognizer</code> to the collection view.
+In the recognizer&rsquo;s called action do the following:</p>
+
+<ul>
+<li>make sure the recognizer is in the <code>began</code> state</li>
+<li>get the index path of the touch point</li>
+<li>call <code>beginDragSelection(at: path)</code> on the collection view:</li>
+</ul>
+<pre class="highlight swift"><code> <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">longPress</span><span class="p">(</span><span class="n">with</span> <span class="nv">gr</span><span class="p">:</span> <span class="kt">UILongPressGestureRecognizer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="n">gr</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="o">.</span><span class="n">began</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">point</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="nf">location</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">collectionView</span><span class="p">)</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">path</span> <span class="o">=</span> <span class="n">collectionView</span><span class="o">.</span><span class="nf">indexPathForItem</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">point</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+        <span class="n">collectionView</span><span class="o">.</span><span class="nf">beginDragSelection</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">path</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre>
+
+<p>That&rsquo;s it! The collection view will track the touch and select / deselect cells as needed.</p>
+
+<p>If at any point you need to stop the drag selection event, call <code>touchesEnded</code>:</p>
+<pre class="highlight swift"><code><span class="n">collectionView</span><span class="o">.</span><span class="nf">touchesEnded</span><span class="p">([],</span> <span class="nv">with</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2018 <a class="link" href="https://haskelash.github.io" target="_blank" rel="external">Haskel Ash</a>. All rights reserved. (Last updated: 2018-03-16)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
