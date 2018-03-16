@@ -101,7 +101,7 @@ public class DragSelectCollectionView: UICollectionView {
      - Returns: `false` if drag selection is alreay in progress or `selection` cannot
      be selected (decided by the `UICollectionViewDelegate`), `true` otherwise.
      */
-    public func beginDragSelection(at selection: IndexPath) -> Bool {
+    @discardableResult public func beginDragSelection(at selection: IndexPath) -> Bool {
         if dragSelectActive {
             DragSelectCollectionView.LOG("Drag selection is already active.")
             return false
