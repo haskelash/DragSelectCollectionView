@@ -89,6 +89,7 @@ extension TestAppViewController: UICollectionViewDelegate {
         cell?.backgroundColor = #colorLiteral(red: 1, green: 0.5411764706, blue: 0.8509803922, alpha: 1)
         selectionCount += 1
         countLabel.title = "Selected: \(selectionCount)"
+        animate(cell: cell)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -96,6 +97,21 @@ extension TestAppViewController: UICollectionViewDelegate {
         cell?.backgroundColor = #colorLiteral(red: 0.4, green: 0.8, blue: 1, alpha: 1)
         selectionCount -= 1
         countLabel.title = "Selected: \(selectionCount)"
+        animate(cell: cell)
+    }
+
+    func animate(cell: UICollectionViewCell?) {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1,
+                       initialSpringVelocity: 0, options: [], animations: {
+            cell?.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            cell?.alpha = 0.8
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1,
+                           initialSpringVelocity: 0, options: [], animations: {
+                cell?.transform = CGAffineTransform(scaleX: 1, y: 1)
+                cell?.alpha = 1
+            }, completion: nil)
+        })
     }
 }
 
@@ -119,6 +135,7 @@ extension TestAppViewController: UICollectionViewDelegateFlowLayout {
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10
     }
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
