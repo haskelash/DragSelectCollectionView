@@ -6,12 +6,15 @@ script:
 after_success:
   - sudo gem install jazzy
   - jazzy
+  - mkdir gh-pages
+  - mv docs gh-pages/
+  - mv README.md gh-pages/
 deploy:
   provider: pages
   skip-cleanup: true
   keep-history: true
   github-token: $GITHUB_TOKEN
-  local-dir: docs/
+  local-dir: gh-pages/
   on:
     branch: master
 env:
