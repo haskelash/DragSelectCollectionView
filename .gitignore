@@ -68,4 +68,5 @@ fastlane/test_output
 
 # jazzy
 
-docs/
+docs/*
+!docs/badge.svg
