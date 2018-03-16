@@ -22,6 +22,6 @@ class TestAppCell: UICollectionViewCell {
     }
 
     func updateLabel(with indexPath: IndexPath) {
-        label.text = "\(indexPath.section), \(indexPath.item)"
+        label.text = "Cell \(indexPath.item)"
     }
 }
