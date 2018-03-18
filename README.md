@@ -1,6 +1,11 @@
 # DragSelectCollectionView
 
-[![Build Status][travis-badge]][travis] [![Code Coverage][codecov-badge]][codecov] [![Documentation](https://haskelash.github.io/DragSelectCollectionView/docs/badge.svg)](https://haskelash.github.io/DragSelectCollectionView/docs/index.html)
+[![Build Status][travis-badge]][travis]
+[![Code Coverage][codecov-badge]][codecov]
+[![Documentation][docs-badge]][docs]
+[![CocoaPods][pods-badge]][pods]
+[![Twitter][twitter-badge]][twitter]
+
 
 A `UICollectionView` subclass for selecting multiple cells while dragging.
 
@@ -29,3 +34,9 @@ Inspiration for this project comes from an [Android version](https://github.com/
 [travis]: https://travis-ci.org/haskelash/DragSelectCollectionView
 [codecov-badge]: https://codecov.io/gh/haskelash/DragSelectCollectionView/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/haskelash/DragSelectCollectionView
+[docs]: https://haskelash.github.io/DragSelectCollectionView/docs/index.html
+[docs-badge]: https://haskelash.github.io/DragSelectCollectionView/docs/badge.svg
+[pods-badge]: https://img.shields.io/cocoapods/v/DragSelectCollectionView.svg
+[pods]: https://cocoapods.org/pods/DragSelectCollectionView
+[twitter]: https://twitter.com/haskelash
+[twitter-badge]: https://img.shields.io/twitter/follow/haskelash.svg?style=social&logo=twitter&label=Follow
