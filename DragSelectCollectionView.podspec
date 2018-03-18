@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "DragSelectCollectionView"
   s.version      = "0.1.0"
-  s.summary      = "A UICollectionView subclass for selecting multiple cells while dragging"
+  s.summary      = "Drag-select cells in a UICollectionView"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -133,5 +133,7 @@ A UICollectionView subclass for selecting multiple cells while dragging
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # s.dependency "JSONKit", "~> 1.4"
+
+  s.swift_version = "4.0"
 
 end
