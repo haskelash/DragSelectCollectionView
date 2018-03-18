@@ -11,7 +11,7 @@ A `UICollectionView` subclass for selecting multiple cells while dragging.
 
 ## Features
 
-Enable selecting collection view cells by dragging along the view | &nbsp; | Auto scroll when the user drags close to the top or bottom of the view | &nbsp; | Set a limit on how many cells can be selected, e.g. a limit of 13
+Enable selecting collection view cells by dragging along the view | &nbsp; | Auto scroll when the user drags close to the top or bottom of the view | &nbsp; | Limit how many cells to select, e.g. limit of thirteen
 :---------------------------:|--------|:----------------------------:|--------|:---------------------------:
 ![dragging example](https://haskelash.github.io/DragSelectCollectionView/gifs/dragging.gif) | &nbsp; | ![auto scroll example](https://haskelash.github.io/DragSelectCollectionView/gifs/hotspots.gif) | &nbsp; | ![selection limit example](https://haskelash.github.io/DragSelectCollectionView/gifs/limit.gif)
 
