@@ -1,6 +1,9 @@
 # DragSelectCollectionView
 
-[![Build Status][travis-badge]][travis] [![Code Coverage][codecov-badge]][codecov] [![Documentation][docs-badge]][docs] 
+[![Build Status][travis-badge]][travis]
+[![Code Coverage][codecov-badge]][codecov]
+[![Documentation][docs-badge]][docs]
+[![CocoaPods][pods-badge]][pods]
 [![Twitter][twitter-badge]][twitter]
 
 
@@ -33,5 +36,7 @@ Inspiration for this project comes from an [Android version](https://github.com/
 [codecov]: https://codecov.io/gh/haskelash/DragSelectCollectionView
 [docs]: https://haskelash.github.io/DragSelectCollectionView/docs/index.html
 [docs-badge]: https://haskelash.github.io/DragSelectCollectionView/docs/badge.svg
+[pods-badge]: https://img.shields.io/cocoapods/v/DragSelectCollectionView.svg
+[pods]: https://cocoapods.org/pods/DragSelectCollectionView
 [twitter]: https://twitter.com/haskelash
 [twitter-badge]: https://img.shields.io/twitter/follow/haskelash.svg?style=social&logo=twitter&label=Follow
