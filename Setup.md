@@ -1,8 +1,16 @@
-## Install
+## Installation
 
-Coming soon...
+### Cocoapods
+Try out the sample project:
+````
+pod try DragSelectCollectionView
+````
+Add this as a dependency to your project:
+````
+pod 'DragSelectCollectionView'
+````
 
-## Integrate
+## Integration
 
 Make your `UICollectionView` an instance of `DragSelectCollectionView`.
 Use it as you would use any other collection view, i.e. with custom data source and delegate objects.
